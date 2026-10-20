@@ -1,4 +1,4 @@
-# Skills Improvements from User Feedback
+﻿# Skills Improvements from User Feedback
 
 **Date:** 2025-11-28
 **Status:** Draft
@@ -111,7 +111,7 @@ Implementers don't naturally step back and critique their own work before report
 ```typescript
 // Interface defines close()
 interface PlatformAdapter {
-  close(): Promise<void>;
+ close(): Promise<void>;
 }
 
 // Code (BUGGY) calls cleanup()
@@ -119,9 +119,9 @@ await adapter.cleanup();
 
 // Mock (MATCHES BUG) defines cleanup()
 vi.mock('web-adapter', () => ({
-  WebAdapter: vi.fn().mockImplementation(() => ({
-    cleanup: vi.fn().mockResolvedValue(undefined),  // Wrong!
-  })),
+ WebAdapter: vi.fn().mockImplementation(() => ({
+ cleanup: vi.fn().mockResolvedValue(undefined), // Wrong!
+ })),
 }));
 ```
 - Tests passed
@@ -214,17 +214,17 @@ BEFORE claiming configuration change works:
 
 1. IDENTIFY: What should be DIFFERENT after this change?
 2. LOCATE: Where is that difference observable?
-   - Response field (model name, user ID)
-   - Log line (environment, provider)
-   - Behavior (feature active/inactive)
+ - Response field (model name, user ID)
+ - Log line (environment, provider)
+ - Behavior (feature active/inactive)
 3. RUN: Command that shows the observable difference
 4. VERIFY: Output contains expected difference
 5. ONLY THEN: Claim configuration change works
 
 Red flags:
-  - "Request succeeded" without checking content
-  - Checking status code but not response body
-  - Verifying no errors but not positive confirmation
+ - "Request succeeded" without checking content
+ - Checking status code but not response body
+ - Verifying no errors but not positive confirmation
 ```
 
 **Why this works:**
@@ -430,12 +430,12 @@ await adapter.cleanup();
 
 // Mock (MATCHES BUG) has cleanup()
 const mock = {
-  cleanup: vi.fn().mockResolvedValue(undefined)
+ cleanup: vi.fn().mockResolvedValue(undefined)
 };
 
 // Interface (CORRECT) defines close()
 interface PlatformAdapter {
-  close(): Promise<void>;
+ close(): Promise<void>;
 }
 ```
 
@@ -447,15 +447,15 @@ interface PlatformAdapter {
 
 **The fix:**
 ```typescript
-// ✅ GOOD: Derive mock from interface
+// GOOD: Derive mock from interface
 
 // Step 1: Open interface definition (PlatformAdapter)
 // Step 2: List methods defined there (close, initialize, etc.)
 // Step 3: Mock EXACTLY those methods
 
 const mock = {
-  initialize: vi.fn().mockResolvedValue(undefined),
-  close: vi.fn().mockResolvedValue(undefined),  // From interface!
+ initialize: vi.fn().mockResolvedValue(undefined),
+ close: vi.fn().mockResolvedValue(undefined), // From interface!
 };
 
 // Now test FAILS because code calls cleanup() which doesn't exist
@@ -467,23 +467,23 @@ const mock = {
 ```
 BEFORE writing any mock:
 
-  1. STOP - Do NOT look at the code under test yet
-  2. FIND: The interface/type definition for the dependency
-  3. READ: The interface file
-  4. LIST: Methods defined in the interface
-  5. MOCK: ONLY those methods with EXACTLY those names
-  6. DO NOT: Look at what your code calls
+ 1. STOP - Do NOT look at the code under test yet
+ 2. FIND: The interface/type definition for the dependency
+ 3. READ: The interface file
+ 4. LIST: Methods defined in the interface
+ 5. MOCK: ONLY those methods with EXACTLY those names
+ 6. DO NOT: Look at what your code calls
 
-  IF your test fails because code calls something not in mock:
-    ✅ GOOD - The test found a bug in your code
-    Fix the code to call the correct interface method
-    NOT the mock
+ IF your test fails because code calls something not in mock:
+ GOOD - The test found a bug in your code
+ Fix the code to call the correct interface method
+ NOT the mock
 
-  Red flags:
-    - "I'll mock what the code calls"
-    - Copying method names from implementation
-    - Mock written without reading interface
-    - "The test is failing so I'll add this method to the mock"
+ Red flags:
+ - "I'll mock what the code calls"
+ - Copying method names from implementation
+ - Mock written without reading interface
+ - "The test is failing so I'll add this method to the mock"
 ```
 
 **Detection:**
@@ -507,12 +507,12 @@ Directly addresses the failure pattern from feedback.
 BEFORE writing any tests:
 
 1. Read testing-anti-patterns skill:
-   Use Skill tool: superpowers:testing-anti-patterns
+ Use Skill tool: superpowers:testing-anti-patterns
 
 2. Apply gate functions from that skill when:
-   - Writing mocks
-   - Adding methods to production classes
-   - Mocking dependencies
+ - Writing mocks
+ - Adding methods to production classes
+ - Mocking dependencies
 
 This is NOT optional. Tests that violate anti-patterns will be rejected in review.
 ```
@@ -539,12 +539,12 @@ Subagent reports back with summary of work.
 Subagent performs self-reflection, then:
 
 IF self-reflection identifies fixable issues:
-  1. Fix the issues
-  2. Re-run verification
-  3. Report: "Initial implementation + self-reflection fix"
+ 1. Fix the issues
+ 2. Re-run verification
+ 3. Report: "Initial implementation + self-reflection fix"
 
 ELSE:
-  Report: "Implementation complete"
+ Report: "Implementation complete"
 
 Include in report:
 - Self-reflection findings
@@ -565,72 +565,72 @@ Slightly more complex prompt, but faster end-to-end.
 ### Phase 1: High-Impact, Low-Risk (Do First)
 
 1. **verification-before-completion: Configuration change verification**
-   - Clear addition, doesn't change existing content
-   - Addresses high-impact problem (false confidence in tests)
-   - File: `skills/verification-before-completion/SKILL.md`
+ - Clear addition, doesn't change existing content
+ - Addresses high-impact problem (false confidence in tests)
+ - File: `skills/verification-before-completion/SKILL.md`
 
 2. **testing-anti-patterns: Mock-interface drift**
-   - Adds new anti-pattern, doesn't modify existing
-   - Addresses high-impact problem (runtime crashes)
-   - File: `skills/testing-anti-patterns/SKILL.md`
+ - Adds new anti-pattern, doesn't modify existing
+ - Addresses high-impact problem (runtime crashes)
+ - File: `skills/testing-anti-patterns/SKILL.md`
 
 3. **requesting-code-review: Explicit file reading**
-   - Simple addition to template
-   - Fixes concrete problem (reviewers can't find files)
-   - File: `skills/requesting-code-review/SKILL.md`
+ - Simple addition to template
+ - Fixes concrete problem (reviewers can't find files)
+ - File: `skills/requesting-code-review/SKILL.md`
 
 ### Phase 2: Moderate Changes (Test Carefully)
 
 4. **subagent-driven-development: Process hygiene**
-   - Adds new section, doesn't change workflow
-   - Addresses medium-high impact (test reliability)
-   - File: `skills/subagent-driven-development/SKILL.md`
+ - Adds new section, doesn't change workflow
+ - Addresses medium-high impact (test reliability)
+ - File: `skills/subagent-driven-development/SKILL.md`
 
 5. **subagent-driven-development: Self-reflection**
-   - Changes prompt template (higher risk)
-   - But documented to catch bugs
-   - File: `skills/subagent-driven-development/SKILL.md`
+ - Changes prompt template (higher risk)
+ - But documented to catch bugs
+ - File: `skills/subagent-driven-development/SKILL.md`
 
 6. **subagent-driven-development: Skills reading requirement**
-   - Adds prompt overhead
-   - But ensures skills are actually used
-   - File: `skills/subagent-driven-development/SKILL.md`
+ - Adds prompt overhead
+ - But ensures skills are actually used
+ - File: `skills/subagent-driven-development/SKILL.md`
 
 ### Phase 3: Optimization (Validate First)
 
 7. **subagent-driven-development: Lean context option**
-   - Adds complexity (two approaches)
-   - Needs validation that it doesn't cause confusion
-   - File: `skills/subagent-driven-development/SKILL.md`
+ - Adds complexity (two approaches)
+ - Needs validation that it doesn't cause confusion
+ - File: `skills/subagent-driven-development/SKILL.md`
 
 8. **subagent-driven-development: Allow implementer to fix**
-   - Changes workflow (higher risk)
-   - Optimization, not bug fix
-   - File: `skills/subagent-driven-development/SKILL.md`
+ - Changes workflow (higher risk)
+ - Optimization, not bug fix
+ - File: `skills/subagent-driven-development/SKILL.md`
 
 ---
 
 ## Open Questions
 
 1. **Lean context approach:**
-   - Should we make it the default for pattern-based tasks?
-   - How do we decide which approach to use?
-   - Risk of being too lean and missing important context?
+ - Should we make it the default for pattern-based tasks?
+ - How do we decide which approach to use?
+ - Risk of being too lean and missing important context?
 
 2. **Self-reflection:**
-   - Will this slow down simple tasks significantly?
-   - Should it only apply to complex tasks?
-   - How do we prevent "reflection fatigue" where it becomes rote?
+ - Will this slow down simple tasks significantly?
+ - Should it only apply to complex tasks?
+ - How do we prevent "reflection fatigue" where it becomes rote?
 
 3. **Process hygiene:**
-   - Should this be in subagent-driven-development or a separate skill?
-   - Does it apply to other workflows beyond E2E tests?
-   - How do we handle cases where process SHOULD persist (dev servers)?
+ - Should this be in subagent-driven-development or a separate skill?
+ - Does it apply to other workflows beyond E2E tests?
+ - How do we handle cases where process SHOULD persist (dev servers)?
 
 4. **Skills reading enforcement:**
-   - Should we require ALL subagents to read relevant skills?
-   - How do we keep prompts from becoming too long?
-   - Risk of over-documenting and losing focus?
+ - Should we require ALL subagents to read relevant skills?
+ - How do we keep prompts from becoming too long?
+ - Risk of over-documenting and losing focus?
 
 ---
 
@@ -639,24 +639,24 @@ Slightly more complex prompt, but faster end-to-end.
 How do we know these improvements work?
 
 1. **Configuration verification:**
-   - Zero instances of "test passed but wrong config was used"
-   - Jesse doesn't say "that's not actually testing what you think"
+ - Zero instances of "test passed but wrong config was used"
+ - Jesse doesn't say "that's not actually testing what you think"
 
 2. **Process hygiene:**
-   - Zero instances of "test hit wrong server"
-   - No port conflict errors during E2E test runs
+ - Zero instances of "test hit wrong server"
+ - No port conflict errors during E2E test runs
 
 3. **Mock-interface drift:**
-   - Zero instances of "tests pass but runtime crashes on missing method"
-   - No method name mismatches between mocks and interfaces
+ - Zero instances of "tests pass but runtime crashes on missing method"
+ - No method name mismatches between mocks and interfaces
 
 4. **Self-reflection:**
-   - Measurable: Do implementer reports include self-reflection findings?
-   - Qualitative: Do fewer bugs make it to code review?
+ - Measurable: Do implementer reports include self-reflection findings?
+ - Qualitative: Do fewer bugs make it to code review?
 
 5. **Skills reading:**
-   - Subagent reports reference skill gate functions
-   - Fewer anti-pattern violations in code review
+ - Subagent reports reference skill gate functions
+ - Fewer anti-pattern violations in code review
 
 ---
 

@@ -1,4 +1,4 @@
-# Codex App Compatibility Implementation Plan
+﻿# Codex App Compatibility Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -53,8 +53,8 @@ BRANCH=$(git branch --show-current)
 1. Run project setup (auto-detect package manager as in "Run Project Setup" below)
 2. Verify clean baseline (run tests as in "Verify Clean Baseline" below)
 3. Report with branch state:
-   - On a branch: "Already in an isolated workspace at `<path>` on branch `<name>`. Tests passing. Ready to implement."
-   - Detached HEAD: "Already in an isolated workspace at `<path>` (detached HEAD, externally managed). Tests passing. Note: branch creation needed at finish time. Ready to implement."
+ - On a branch: "Already in an isolated workspace at `<path>` on branch `<name>`. Tests passing. Ready to implement."
+ - Detached HEAD: "Already in an isolated workspace at `<path>` (detached HEAD, externally managed). Tests passing. Note: branch creation needed at finish time. Ready to implement."
 
 After reporting, STOP. Do not continue to Directory Selection or Creation Steps.
 
@@ -155,7 +155,7 @@ Current HEAD: <full-commit-sha>
 This workspace is externally managed (detached HEAD).
 I cannot create branches, push, or open PRs from here.
 
-⚠ These commits are on a detached HEAD. If you do not create a branch,
+ These commits are on a detached HEAD. If you do not create a branch,
 they may be lost when this workspace is cleaned up.
 
 If your host application provides these controls:
@@ -415,19 +415,19 @@ FAIL=0
 TEMP_DIR=$(mktemp -d)
 trap "rm -rf $TEMP_DIR" EXIT
 
-log_pass() { echo "  PASS: $1"; PASS=$((PASS + 1)); }
-log_fail() { echo "  FAIL: $1"; FAIL=$((FAIL + 1)); }
+log_pass() { echo " PASS: $1"; PASS=$((PASS + 1)); }
+log_fail() { echo " FAIL: $1"; FAIL=$((FAIL + 1)); }
 
 # Helper: run detection and return "linked" or "normal"
 detect_worktree() {
-  local git_dir git_common
-  git_dir=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
-  git_common=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
-  if [ "$git_dir" != "$git_common" ]; then
-    echo "linked"
-  else
-    echo "normal"
-  fi
+ local git_dir git_common
+ git_dir=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
+ git_common=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
+ if [ "$git_dir" != "$git_common" ]; then
+ echo "linked"
+ else
+ echo "normal"
+ fi
 }
 
 echo "=== Test 1: Normal repo detection ==="
@@ -437,9 +437,9 @@ cd test-repo
 git commit --allow-empty -m "init" > /dev/null 2>&1
 result=$(detect_worktree)
 if [ "$result" = "normal" ]; then
-  log_pass "Normal repo detected as normal"
+ log_pass "Normal repo detected as normal"
 else
-  log_fail "Normal repo detected as '$result' (expected 'normal')"
+ log_fail "Normal repo detected as '$result' (expected 'normal')"
 fi
 
 echo "=== Test 2: Linked worktree detection ==="
@@ -447,45 +447,45 @@ git worktree add "$TEMP_DIR/test-wt" -b test-branch > /dev/null 2>&1
 cd "$TEMP_DIR/test-wt"
 result=$(detect_worktree)
 if [ "$result" = "linked" ]; then
-  log_pass "Linked worktree detected as linked"
+ log_pass "Linked worktree detected as linked"
 else
-  log_fail "Linked worktree detected as '$result' (expected 'linked')"
+ log_fail "Linked worktree detected as '$result' (expected 'linked')"
 fi
 
 echo "=== Test 3: Detached HEAD detection ==="
 git checkout --detach HEAD > /dev/null 2>&1
 branch=$(git branch --show-current)
 if [ -z "$branch" ]; then
-  log_pass "Detached HEAD: branch is empty"
+ log_pass "Detached HEAD: branch is empty"
 else
-  log_fail "Detached HEAD: branch is '$branch' (expected empty)"
+ log_fail "Detached HEAD: branch is '$branch' (expected empty)"
 fi
 
 echo "=== Test 4: Linked worktree + detached HEAD (Codex App simulation) ==="
 result=$(detect_worktree)
 branch=$(git branch --show-current)
 if [ "$result" = "linked" ] && [ -z "$branch" ]; then
-  log_pass "Codex App simulation: linked + detached HEAD"
+ log_pass "Codex App simulation: linked + detached HEAD"
 else
-  log_fail "Codex App simulation: result='$result', branch='$branch'"
+ log_fail "Codex App simulation: result='$result', branch='$branch'"
 fi
 
 echo "=== Test 5: Cleanup guard — linked worktree should NOT remove ==="
 cd "$TEMP_DIR/test-wt"
 result=$(detect_worktree)
 if [ "$result" = "linked" ]; then
-  log_pass "Cleanup guard: linked worktree correctly detected (would skip removal)"
+ log_pass "Cleanup guard: linked worktree correctly detected (would skip removal)"
 else
-  log_fail "Cleanup guard: expected 'linked', got '$result'"
+ log_fail "Cleanup guard: expected 'linked', got '$result'"
 fi
 
 echo "=== Test 6: Cleanup guard — main repo SHOULD remove ==="
 cd "$TEMP_DIR/test-repo"
 result=$(detect_worktree)
 if [ "$result" = "normal" ]; then
-  log_pass "Cleanup guard: main repo correctly detected (would proceed with removal)"
+ log_pass "Cleanup guard: main repo correctly detected (would proceed with removal)"
 else
-  log_fail "Cleanup guard: expected 'normal', got '$result'"
+ log_fail "Cleanup guard: expected 'normal', got '$result'"
 fi
 
 # Cleanup worktree before temp dir removal
@@ -495,7 +495,7 @@ git worktree remove "$TEMP_DIR/test-wt" > /dev/null 2>&1 || true
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
 if [ "$FAIL" -gt 0 ]; then
-  exit 1
+ exit 1
 fi
 ```
 

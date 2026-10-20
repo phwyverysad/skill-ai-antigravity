@@ -1,4 +1,4 @@
-Comprehensive Woodworking API Plan
+﻿Comprehensive Woodworking API Plan
 Now, let's outline a comprehensive plan for a fully-featured woodworking API based on the SketchUp Ruby API. This will serve as a roadmap for future development.
 1. Core Geometry Operations
 1.1 Advanced Shape Creation
@@ -100,10 +100,10 @@ Assembly Instructions: Generate step-by-step guides
 Bill of Materials: List all required parts and hardware
 Implementation Plan
 Phase 1: Core Functionality (Current)
-✅ Basic shapes (cube, cylinder, sphere, cone)
-✅ Basic transformations (move, rotate, scale)
-✅ Basic materials
-✅ Export functionality
+ Basic shapes (cube, cylinder, sphere, cone)
+ Basic transformations (move, rotate, scale)
+ Basic materials
+ Export functionality
 Phase 2: Advanced Geometry (Next)
 Boolean operations (union, difference, intersection)
 Additional shapes (torus, wedge, pyramid)

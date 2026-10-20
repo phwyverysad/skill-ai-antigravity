@@ -1,11 +1,11 @@
-<p align="center">
-  <img src="https://em-content.zobj.net/source/apple/391/rock_1faa8.png" width="80" />
+﻿<p align="center">
+ <img src="https://em-content.zobj.net/source/apple/391/rock_1faa8.png" width="80" />
 </p>
 
 <h1 align="center">caveman-compress</h1>
 
 <p align="center">
-  <strong>shrink memory file. save token every session.</strong>
+ <strong>shrink memory file. save token every session.</strong>
 </p>
 
 ---
@@ -23,7 +23,7 @@ input tokens. Caveman shortens supported natural-language files.
 ```
 
 ```
-CLAUDE.md          ← compressed (Claude reads smaller file each session)
+CLAUDE.md ← compressed (Claude reads smaller file each session)
 CLAUDE.original.md ← human-readable backup (you edit this)
 ```
 
@@ -110,32 +110,32 @@ Examples:
 |------|-----------|
 | `.md`, `.mdc`, `.txt`, `.rst`, `.typ`, `.typst`, `.tex` | Yes |
 | Extensionless natural language | Yes |
-| `.py`, `.js`, `.ts`, `.json`, `.yaml` | ❌ Skip (code/config) |
-| `*.original.md` | ❌ Skip (backup files) |
+| `.py`, `.js`, `.ts`, `.json`, `.yaml` | Skip (code/config) |
+| `*.original.md` | Skip (backup files) |
 
 ## How It Work
 
 ```
 /caveman-compress CLAUDE.md
-        ↓
+ ↓
 basic checks: file exists, under 500KB, not a sensitive filename
-        ↓
-acquire cross-session lock on the file  (waits up to 15 min if another run holds it, then errors)
-        ↓
-detect file type        (no tokens)
-        ↓
-Claude compresses       (tokens: one call)
-        ↓
-validate output         (no tokens)
-  checks: headings, code blocks, URLs, file paths, bullets
-        ↓
-if errors: Claude fixes cherry-picked issues only   (tokens: targeted fix)
-  does NOT recompress; only patches broken parts
-        ↓
+ ↓
+acquire cross-session lock on the file (waits up to 15 min if another run holds it, then errors)
+ ↓
+detect file type (no tokens)
+ ↓
+Claude compresses (tokens: one call)
+ ↓
+validate output (no tokens)
+ checks: headings, code blocks, URLs, file paths, bullets
+ ↓
+if errors: Claude fixes cherry-picked issues only (tokens: targeted fix)
+ does NOT recompress; only patches broken parts
+ ↓
 retry up to 2 times
-        ↓
+ ↓
 write compressed → CLAUDE.md
-write original   → CLAUDE.original.md
+write original → CLAUDE.original.md
 ```
 
 Only two things use tokens: initial compression + targeted fix if validation fails. Everything else is local Python.
@@ -165,10 +165,10 @@ general semantic or task-quality equivalence.
 
 ```
 ┌────────────────────────────────────────────┐
-│  TOKEN SAVINGS PER FILE    █████       46% │
-│  FIXTURES IN TABLE                       5 │
-│  STRUCTURAL VALIDATION       passed on all │
-│  SETUP TIME                █            1x │
+│ TOKEN SAVINGS PER FILE █████ 46% │
+│ FIXTURES IN TABLE 5 │
+│ STRUCTURAL VALIDATION passed on all │
+│ SETUP TIME █ 1x │
 └────────────────────────────────────────────┘
 ```
 

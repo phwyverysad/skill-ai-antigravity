@@ -1,4 +1,4 @@
----
+﻿---
 name: dispatching-parallel-agents
 description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
 ---
@@ -17,19 +17,19 @@ When you have multiple unrelated failures (different test files, different subsy
 
 ```dot
 digraph when_to_use {
-    "Multiple failures?" [shape=diamond];
-    "Are they independent?" [shape=diamond];
-    "Single agent investigates all" [shape=box];
-    "One agent per problem domain" [shape=box];
-    "Can they work in parallel?" [shape=diamond];
-    "Sequential agents" [shape=box];
-    "Parallel dispatch" [shape=box];
+ "Multiple failures?" [shape=diamond];
+ "Are they independent?" [shape=diamond];
+ "Single agent investigates all" [shape=box];
+ "One agent per problem domain" [shape=box];
+ "Can they work in parallel?" [shape=diamond];
+ "Sequential agents" [shape=box];
+ "Parallel dispatch" [shape=box];
 
-    "Multiple failures?" -> "Are they independent?" [label="yes"];
-    "Are they independent?" -> "Single agent investigates all" [label="no - related"];
-    "Are they independent?" -> "Can they work in parallel?" [label="yes"];
-    "Can they work in parallel?" -> "Parallel dispatch" [label="yes"];
-    "Can they work in parallel?" -> "Sequential agents" [label="no - shared state"];
+ "Multiple failures?" -> "Are they independent?" [label="yes"];
+ "Are they independent?" -> "Single agent investigates all" [label="no - related"];
+ "Are they independent?" -> "Can they work in parallel?" [label="yes"];
+ "Can they work in parallel?" -> "Parallel dispatch" [label="yes"];
+ "Can they work in parallel?" -> "Sequential agents" [label="no - shared state"];
 }
 ```
 
@@ -103,9 +103,9 @@ These are timing/race condition issues. Your task:
 1. Read the test file and understand what each test verifies
 2. Identify root cause - timing issues or actual bugs?
 3. Fix by:
-   - Replacing arbitrary timeouts with event-based waiting
-   - Fixing bugs in abort implementation if found
-   - Adjusting test expectations if testing changed behavior
+ - Replacing arbitrary timeouts with event-based waiting
+ - Fixing bugs in abort implementation if found
+ - Adjusting test expectations if testing changed behavior
 
 Do NOT just increase timeouts - find the real issue.
 
@@ -114,17 +114,17 @@ Return: Summary of what you found and what you fixed.
 
 ## Common Mistakes
 
-**❌ Too broad:** "Fix all the tests" - agent gets lost
-**✅ Specific:** "Fix agent-tool-abort.test.ts" - focused scope
+** Too broad:** "Fix all the tests" - agent gets lost
+** Specific:** "Fix agent-tool-abort.test.ts" - focused scope
 
-**❌ No context:** "Fix the race condition" - agent doesn't know where
-**✅ Context:** Paste the error messages and test names
+** No context:** "Fix the race condition" - agent doesn't know where
+** Context:** Paste the error messages and test names
 
-**❌ No constraints:** Agent might refactor everything
-**✅ Constraints:** "Do NOT change production code" or "Fix tests only"
+** No constraints:** Agent might refactor everything
+** Constraints:** "Do NOT change production code" or "Fix tests only"
 
-**❌ Vague output:** "Fix it" - you don't know what changed
-**✅ Specific:** "Return summary of root cause and changes"
+** Vague output:** "Fix it" - you don't know what changed
+** Specific:** "Return summary of root cause and changes"
 
 ## When NOT to Use
 

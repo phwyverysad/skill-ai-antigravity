@@ -1,4 +1,4 @@
-# Codex App Compatibility: Worktree and Finishing Skill Adaptation
+﻿# Codex App Compatibility: Worktree and Finishing Skill Adaptation
 
 Make superpowers skills work in the Codex App's sandboxed worktree environment without breaking existing Claude Code or Codex CLI behavior.
 
@@ -71,8 +71,8 @@ Run the detection commands. If `GIT_DIR != GIT_COMMON`, skip worktree creation e
 1. Skip to "Run Project Setup" subsection under Creation Steps — `npm install` etc. is idempotent, worth running for safety
 2. Then "Verify Clean Baseline" — run tests
 3. Report with branch state:
-   - On a branch: "Already in an isolated workspace at `<path>` on branch `<name>`. Tests passing. Ready to implement."
-   - Detached HEAD: "Already in an isolated workspace at `<path>` (detached HEAD, externally managed). Tests passing. Note: branch creation needed at finish time. Ready to implement."
+ - On a branch: "Already in an isolated workspace at `<path>` on branch `<name>`. Tests passing. Ready to implement."
+ - Detached HEAD: "Already in an isolated workspace at `<path>` (detached HEAD, externally managed). Tests passing. Note: branch creation needed at finish time. Ready to implement."
 
 If `GIT_DIR == GIT_COMMON`, proceed with the full worktree creation flow (unchanged).
 
@@ -108,7 +108,7 @@ Current HEAD: <full-commit-sha>
 This workspace is externally managed (detached HEAD).
 I cannot create branches, push, or open PRs from here.
 
-⚠ These commits are on a detached HEAD. If you do not create a branch,
+ These commits are on a detached HEAD. If you do not create a branch,
 they may be lost when this workspace is cleaned up.
 
 If your host application provides these controls:

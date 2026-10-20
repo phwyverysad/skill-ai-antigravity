@@ -1,16 +1,16 @@
-# Firebase Auth iOS Setup Guide
+﻿# Firebase Auth iOS Setup Guide
 
-# ⛔️ CRITICAL RULE: NO INLINE INITIALIZATION ⛔️
+# ️ CRITICAL RULE: NO INLINE INITIALIZATION ️
 
 NEVER write `let auth = Auth.auth()` as an inline class or struct property if
 there is ANY chance the object is instantiated before `FirebaseApp.configure()`
 executes in the app root.
 
 - **FATAL CRASH:** `@Observable class AuthManager { let auth = Auth.auth() }`
-  initialized as a `@State` in the App root.
+ initialized as a `@State` in the App root.
 - **SAFE PATTERN:** Initialize `Auth.auth()` lazily
-  (`lazy var auth = Auth.auth()`) OR explicitly initialize the manager *after*
-  `FirebaseApp.configure()` finishes.
+ (`lazy var auth = Auth.auth()`) OR explicitly initialize the manager *after*
+ `FirebaseApp.configure()` finishes.
 
 ## 1. Import and Initialize
 
@@ -35,16 +35,16 @@ is signed in):
 var handle: AuthStateDidChangeListenerHandle?
 
 handle = Auth.auth().addStateDidChangeListener { auth, user in
-  if let user = user {
-    print("User is signed in with uid: \(user.uid)")
-  } else {
-    print("User is signed out")
-  }
+ if let user = user {
+ print("User is signed in with uid: \(user.uid)")
+ } else {
+ print("User is signed out")
+ }
 }
 
 // To remove the listener when no longer needed:
 if let handle = handle {
-  Auth.auth().removeStateDidChangeListener(handle)
+ Auth.auth().removeStateDidChangeListener(handle)
 }
 ```
 
@@ -57,10 +57,10 @@ to avoid nested completion handlers and improve readability.
 
 ```swift
 do {
-    let authResult = try await Auth.auth().createUser(withEmail: "user@example.com", password: "password")
-    print("User created successfully with uid: \(authResult.user.uid)")
+ let authResult = try await Auth.auth().createUser(withEmail: "user@example.com", password: "password")
+ print("User created successfully with uid: \(authResult.user.uid)")
 } catch {
-    print("Error creating user: \(error.localizedDescription)")
+ print("Error creating user: \(error.localizedDescription)")
 }
 ```
 
@@ -68,10 +68,10 @@ do {
 
 ```swift
 do {
-    let authResult = try await Auth.auth().signIn(withEmail: "user@example.com", password: "password")
-    print("User signed in successfully with uid: \(authResult.user.uid)")
+ let authResult = try await Auth.auth().signIn(withEmail: "user@example.com", password: "password")
+ print("User signed in successfully with uid: \(authResult.user.uid)")
 } catch {
-    print("Error signing in: \(error.localizedDescription)")
+ print("Error signing in: \(error.localizedDescription)")
 }
 ```
 
@@ -79,9 +79,9 @@ do {
 
 ```swift
 do {
-  try Auth.auth().signOut()
-  print("Successfully signed out")
+ try Auth.auth().signOut()
+ print("Successfully signed out")
 } catch let signOutError as NSError {
-  print("Error signing out: \(signOutError)")
+ print("Error signing out: \(signOutError)")
 }
 ```

@@ -1,8 +1,8 @@
----
+﻿---
 name: caveman-commit
 description: >
-  Write a Conventional Commits message compressed to intent only. Use for
-  "write a commit", "commit message", /commit or /caveman-commit.
+ Write a Conventional Commits message compressed to intent only. Use for
+ "write a commit", "commit message", /commit or /caveman-commit.
 ---
 
 Write commit messages terse and exact. Conventional Commits format. No fluff. Why over what.
@@ -34,25 +34,25 @@ Write commit messages terse and exact. Conventional Commits format. No fluff. Wh
 ## Examples
 
 Diff: new endpoint for user profile with body explaining the why
-- ❌ "feat: add a new endpoint to get user profile information from the database"
-- ✅
-  ```
-  feat(api): add GET /users/:id/profile
+- "feat: add a new endpoint to get user profile information from the database"
+- 
+ ```
+ feat(api): add GET /users/:id/profile
 
-  Mobile client needs profile data without the full user payload
-  to reduce LTE bandwidth on cold-launch screens.
+ Mobile client needs profile data without the full user payload
+ to reduce LTE bandwidth on cold-launch screens.
 
-  Closes #128
-  ```
+ Closes #128
+ ```
 
 Diff: breaking API change
-- ✅
-  ```
-  feat(api)!: rename /v1/orders to /v1/checkout
+- 
+ ```
+ feat(api)!: rename /v1/orders to /v1/checkout
 
-  BREAKING CHANGE: clients on /v1/orders must migrate to /v1/checkout
-  before 2026-06-01. Old route returns 410 after that date.
-  ```
+ BREAKING CHANGE: clients on /v1/orders must migrate to /v1/checkout
+ before 2026-06-01. Old route returns 410 after that date.
+ ```
 
 ## Auto-Clarity
 

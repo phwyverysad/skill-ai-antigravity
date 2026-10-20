@@ -1,4 +1,4 @@
-# SDD Task-Scoped Review Dispatch Implementation Plan
+﻿# SDD Task-Scoped Review Dispatch Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -34,112 +34,112 @@ Use this template when dispatching a code quality reviewer subagent.
 
 ```
 Subagent (general-purpose):
-  description: "Review code quality for Task N"
-  prompt: |
-    You are reviewing one task's implementation for code quality. This is a
-    task-scoped gate, not a merge review — a broad whole-branch review happens
-    separately after all tasks are complete.
+ description: "Review code quality for Task N"
+ prompt: |
+ You are reviewing one task's implementation for code quality. This is a
+ task-scoped gate, not a merge review — a broad whole-branch review happens
+ separately after all tasks are complete.
 
-    ## What Was Implemented
+ ## What Was Implemented
 
-    [DESCRIPTION]
+ [DESCRIPTION]
 
-    ## Task Requirements (context only)
+ ## Task Requirements (context only)
 
-    [TASK_TEXT]
+ [TASK_TEXT]
 
-    ## Git Range to Review
+ ## Git Range to Review
 
-    **Base:** [BASE_SHA]
-    **Head:** [HEAD_SHA]
+ **Base:** [BASE_SHA]
+ **Head:** [HEAD_SHA]
 
-    ```bash
-    git diff --stat [BASE_SHA]..[HEAD_SHA]
-    git diff [BASE_SHA]..[HEAD_SHA]
-    ```
+ ```bash
+ git diff --stat [BASE_SHA]..[HEAD_SHA]
+ git diff [BASE_SHA]..[HEAD_SHA]
+ ```
 
-    ## Read-Only Review
+ ## Read-Only Review
 
-    Your review is read-only on this checkout. Do not mutate the working tree,
-    the index, HEAD, or branch state in any way. Use tools like `git show`,
-    `git diff`, and `git log` to inspect history.
+ Your review is read-only on this checkout. Do not mutate the working tree,
+ the index, HEAD, or branch state in any way. Use tools like `git show`,
+ `git diff`, and `git log` to inspect history.
 
-    ## Scope
+ ## Scope
 
-    Spec compliance was already verified by a separate reviewer. Do not
-    re-check whether the code matches the requirements or the plan.
+ Spec compliance was already verified by a separate reviewer. Do not
+ re-check whether the code matches the requirements or the plan.
 
-    Start from the diff. Read the changed files first. Inspect code outside
-    the diff only to evaluate a concrete risk you can name — and name it in
-    your report. Cross-cutting changes are legitimate named risks: if the
-    diff changes lock ordering, a function or API contract, or shared mutable
-    state, checking the call sites is the right method. Do not crawl the
-    codebase by default.
+ Start from the diff. Read the changed files first. Inspect code outside
+ the diff only to evaluate a concrete risk you can name — and name it in
+ your report. Cross-cutting changes are legitimate named risks: if the
+ diff changes lock ordering, a function or API contract, or shared mutable
+ state, checking the call sites is the right method. Do not crawl the
+ codebase by default.
 
-    ## Tests
+ ## Tests
 
-    The implementer already ran the tests and reported results with TDD
-    evidence for exactly this code. Do not re-run the suite to confirm their
-    report. Run a test only when reading the code raises a specific doubt
-    that no existing run answers — and then a focused test, never a
-    package-wide suite, race detector run, or repeated/high-count loop. If
-    heavy validation seems warranted, recommend it in your report instead of
-    running it. If you cannot run commands in this environment, name the
-    test you would run.
+ The implementer already ran the tests and reported results with TDD
+ evidence for exactly this code. Do not re-run the suite to confirm their
+ report. Run a test only when reading the code raises a specific doubt
+ that no existing run answers — and then a focused test, never a
+ package-wide suite, race detector run, or repeated/high-count loop. If
+ heavy validation seems warranted, recommend it in your report instead of
+ running it. If you cannot run commands in this environment, name the
+ test you would run.
 
-    ## What to Check
+ ## What to Check
 
-    **Code quality:**
-    - Clean separation of concerns?
-    - Proper error handling?
-    - DRY without premature abstraction?
-    - Edge cases handled?
+ **Code quality:**
+ - Clean separation of concerns?
+ - Proper error handling?
+ - DRY without premature abstraction?
+ - Edge cases handled?
 
-    **Tests:**
-    - Do the new and changed tests verify real behavior, not mocks?
-    - Are the task's edge cases covered?
+ **Tests:**
+ - Do the new and changed tests verify real behavior, not mocks?
+ - Are the task's edge cases covered?
 
-    **Structure:**
-    - Does each file have one clear responsibility with a well-defined interface?
-    - Are units decomposed so they can be understood and tested independently?
-    - Is the implementation following the file structure from the plan?
-    - Did this change create new files that are already large, or
-      significantly grow existing files? (Don't flag pre-existing file
-      sizes — focus on what this change contributed.)
+ **Structure:**
+ - Does each file have one clear responsibility with a well-defined interface?
+ - Are units decomposed so they can be understood and tested independently?
+ - Is the implementation following the file structure from the plan?
+ - Did this change create new files that are already large, or
+ significantly grow existing files? (Don't flag pre-existing file
+ sizes — focus on what this change contributed.)
 
-    ## Calibration
+ ## Calibration
 
-    Categorize issues by actual severity. Not everything is Critical.
-    Acknowledge what was done well before listing issues — accurate praise
-    helps the implementer trust the rest of the feedback.
+ Categorize issues by actual severity. Not everything is Critical.
+ Acknowledge what was done well before listing issues — accurate praise
+ helps the implementer trust the rest of the feedback.
 
-    ## Output Format
+ ## Output Format
 
-    ### Strengths
-    [What's well done? Be specific.]
+ ### Strengths
+ [What's well done? Be specific.]
 
-    ### Issues
+ ### Issues
 
-    #### Critical (Must Fix)
-    [Bugs, data loss risks, broken functionality]
+ #### Critical (Must Fix)
+ [Bugs, data loss risks, broken functionality]
 
-    #### Important (Should Fix)
-    [Poor error handling, test gaps, structural problems]
+ #### Important (Should Fix)
+ [Poor error handling, test gaps, structural problems]
 
-    #### Minor (Nice to Have)
-    [Code style, optimization opportunities]
+ #### Minor (Nice to Have)
+ [Code style, optimization opportunities]
 
-    For each issue:
-    - File:line reference
-    - What's wrong
-    - Why it matters
-    - How to fix (if not obvious)
+ For each issue:
+ - File:line reference
+ - What's wrong
+ - Why it matters
+ - How to fix (if not obvious)
 
-    ### Assessment
+ ### Assessment
 
-    **Task quality:** [Approved | Needs fixes]
+ **Task quality:** [Approved | Needs fixes]
 
-    **Reasoning:** [1-2 sentence technical assessment]
+ **Reasoning:** [1-2 sentence technical assessment]
 ```
 
 **Placeholders:**
@@ -181,62 +181,62 @@ Four exact edits to `skills/subagent-driven-development/spec-reviewer-prompt.md`
 - [ ] **Step 1: Add the judge-from-the-diff clause.** After the line (currently line 31):
 
 ```
-    Only read files in this diff. Do not crawl the broader codebase.
+ Only read files in this diff. Do not crawl the broader codebase.
 ```
 
 insert a blank line and:
 
 ```
-    Spec compliance is judged by reading the diff against the requirements.
-    The implementer already ran the tests and reported TDD evidence — do not
-    re-run them. If a requirement cannot be verified from this diff alone
-    (it lives in unchanged code or spans tasks), report it as a ⚠️ item
-    instead of broadening your search.
+ Spec compliance is judged by reading the diff against the requirements.
+ The implementer already ran the tests and reported TDD evidence — do not
+ re-run them. If a requirement cannot be verified from this diff alone
+ (it lives in unchanged code or spans tasks), report it as a ️ item
+ instead of broadening your search.
 ```
 
 - [ ] **Step 2: Trim the read-only section.** Replace (currently line 35):
 
 ```
-    Your review is read-only on this checkout. Do not mutate the working tree, the index, HEAD, or branch state in any way. Use tools like `git show`, `git diff`, and `git log` to inspect history. If you need a working copy of a different revision, check it out into a separate temporary directory (e.g. `git worktree add /tmp/review-[SHA] [SHA]`) — never move HEAD on this checkout.
+ Your review is read-only on this checkout. Do not mutate the working tree, the index, HEAD, or branch state in any way. Use tools like `git show`, `git diff`, and `git log` to inspect history. If you need a working copy of a different revision, check it out into a separate temporary directory (e.g. `git worktree add /tmp/review-[SHA] [SHA]`) — never move HEAD on this checkout.
 ```
 
 with:
 
 ```
-    Your review is read-only on this checkout. Do not mutate the working tree, the index, HEAD, or branch state in any way. Use tools like `git show`, `git diff`, and `git log` to inspect history.
+ Your review is read-only on this checkout. Do not mutate the working tree, the index, HEAD, or branch state in any way. Use tools like `git show`, `git diff`, and `git log` to inspect history.
 ```
 
 - [ ] **Step 3: Ground the skepticism.** Replace (currently lines 39-40):
 
 ```
-    The implementer finished suspiciously quickly. Their report may be incomplete,
-    inaccurate, or optimistic. You MUST verify everything independently.
+ The implementer finished suspiciously quickly. Their report may be incomplete,
+ inaccurate, or optimistic. You MUST verify everything independently.
 ```
 
 with:
 
 ```
-    Treat the implementer's report as unverified claims about the code. It may
-    be incomplete, inaccurate, or optimistic. Verify the claims against the diff.
+ Treat the implementer's report as unverified claims about the code. It may
+ be incomplete, inaccurate, or optimistic. Verify the claims against the diff.
 ```
 
 - [ ] **Step 4: Add the third verdict channel.** Replace (currently lines 74-76):
 
 ```
-    Report:
-    - ✅ Spec compliant (if everything matches after code inspection)
-    - ❌ Issues found: [list specifically what's missing or extra, with file:line references]
+ Report:
+ - Spec compliant (if everything matches after code inspection)
+ - Issues found: [list specifically what's missing or extra, with file:line references]
 ```
 
 with:
 
 ```
-    Report:
-    - ✅ Spec compliant (if everything matches after code inspection)
-    - ❌ Issues found: [list specifically what's missing or extra, with file:line references]
-    - ⚠️ Cannot verify from diff: [requirements you could not verify from the
-      diff alone, and what the controller should check — report alongside the
-      ✅/❌ verdict for everything you could verify]
+ Report:
+ - Spec compliant (if everything matches after code inspection)
+ - Issues found: [list specifically what's missing or extra, with file:line references]
+ - ️ Cannot verify from diff: [requirements you could not verify from the
+ diff alone, and what the controller should check — report alongside the
+ / verdict for everything you could verify]
 ```
 
 - [ ] **Step 5: Verify**
@@ -244,14 +244,14 @@ with:
 Run: `grep -n "suspiciously\|worktree add" skills/subagent-driven-development/spec-reviewer-prompt.md || echo CLEAN`
 Expected: `CLEAN`
 
-Run: `grep -c "⚠️" skills/subagent-driven-development/spec-reviewer-prompt.md`
+Run: `grep -c "️" skills/subagent-driven-development/spec-reviewer-prompt.md`
 Expected: `2` (judge-from-diff clause + verdict channel)
 
 - [ ] **Step 6: Commit**
 
 ```bash
 git add skills/subagent-driven-development/spec-reviewer-prompt.md
-git commit -m "Spec reviewer: judge from the diff, grounded skepticism, ⚠️ verdict channel"
+git commit -m "Spec reviewer: judge from the diff, grounded skepticism, ️ verdict channel"
 ```
 
 ---
@@ -266,17 +266,17 @@ The reviewers' "don't re-run the implementer's tests" rule assumes the implement
 - [ ] **Step 1: Insert a new section.** Immediately before the line (currently line 100):
 
 ```
-    ## Report Format
+ ## Report Format
 ```
 
 insert:
 
 ```
-    ## After Review Findings
+ ## After Review Findings
 
-    If a reviewer finds issues and you fix them, re-run the tests that cover
-    the amended code and include the results in your fix report. Reviewers
-    will not re-run tests for you — your report is the test evidence.
+ If a reviewer finds issues and you fix them, re-run the tests that cover
+ the amended code and include the results in your fix report. Reviewers
+ will not re-run tests for you — your report is the test evidence.
 
 ```
 
@@ -338,9 +338,9 @@ most capable model; a subtle concurrency change does.
 insert:
 
 ```
-## Handling Spec Reviewer ⚠️ Items
+## Handling Spec Reviewer ️ Items
 
-The spec reviewer may report "⚠️ Cannot verify from diff" items — requirements
+The spec reviewer may report "️ Cannot verify from diff" items — requirements
 that live in unchanged code or span tasks. These do not block dispatching the
 code quality reviewer, but you must resolve each one yourself before marking
 the task complete: you hold the plan and cross-task context the reviewer
@@ -353,9 +353,9 @@ Per-task reviews are task-scoped gates. The broad review happens once, at the
 final whole-branch review. When you fill a reviewer template:
 
 - Do not add open-ended directives like "check all uses" or "run race tests
-  if useful" without a concrete, task-specific reason
+ if useful" without a concrete, task-specific reason
 - Do not ask a reviewer to re-run tests the implementer already ran on the
-  same code — the implementer's report carries the test evidence
+ same code — the implementer's report carries the test evidence
 
 ```
 
@@ -385,11 +385,11 @@ Code reviewer: Strengths: Good test coverage, clean. Issues: None. Task quality:
 
 Replace (currently line 191):
 ```
-Code reviewer: ✅ Approved
+Code reviewer: Approved
 ```
 with:
 ```
-Code reviewer: ✅ Task quality: Approved
+Code reviewer: Task quality: Approved
 ```
 
 (The final reviewer's "ready to merge" line, currently line 199, stays.)
@@ -424,7 +424,7 @@ Expected: `2`
 
 ```bash
 git add skills/subagent-driven-development/SKILL.md
-git commit -m "SDD controller: reviewer prompt budgets, ⚠️ handling, final-review pointer, model judgment"
+git commit -m "SDD controller: reviewer prompt budgets, ️ handling, final-review pointer, model judgment"
 ```
 
 ---
@@ -470,12 +470,12 @@ from setup_helpers.base import _git
 
 PACKAGE_JSON = """\
 {
-  "name": "report-quality",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "test": "node --test"
-  }
+ "name": "report-quality",
+ "version": "1.0.0",
+ "type": "module",
+ "scripts": {
+ "test": "node --test"
+ }
 }
 """
 
@@ -493,21 +493,21 @@ specifies.
 - Function named `formatUserReport`
 - Takes one parameter `user`: an object with `name`, `email`, `visits`
 - Returns a multi-line string: a banner of 40 `=` characters, then
-  `Report for <name> <<email>>`, then the banner again, then
-  `Visits: <visits>`, then a closing banner
+ `Report for <name> <<email>>`, then the banner again, then
+ `Visits: <visits>`, then a closing banner
 - Export the function
 
 **Implementation:**
 ```javascript
 export function formatUserReport(user) {
-  const banner = "=".repeat(40);
-  const lines = [];
-  lines.push(banner);
-  lines.push(`Report for ${user.name} <${user.email}>`);
-  lines.push(banner);
-  lines.push(`Visits: ${user.visits}`);
-  lines.push(banner);
-  return lines.join("\\n");
+ const banner = "=".repeat(40);
+ const lines = [];
+ lines.push(banner);
+ lines.push(`Report for ${user.name} <${user.email}>`);
+ lines.push(banner);
+ lines.push(`Visits: ${user.visits}`);
+ lines.push(banner);
+ return lines.join("\\n");
 }
 ```
 
@@ -526,20 +526,20 @@ export function formatUserReport(user) {
 - Function named `formatAdminReport`
 - Takes one parameter `admin`: an object with `name`, `email`, `lastLogin`
 - Same banner layout as the user report; the body line is
-  `Last login: <lastLogin>` instead of the visits line
+ `Last login: <lastLogin>` instead of the visits line
 - Export the function; keep `formatUserReport` working
 
 **Implementation:**
 ```javascript
 export function formatAdminReport(admin) {
-  const banner = "=".repeat(40);
-  const lines = [];
-  lines.push(banner);
-  lines.push(`Report for ${admin.name} <${admin.email}>`);
-  lines.push(banner);
-  lines.push(`Last login: ${admin.lastLogin}`);
-  lines.push(banner);
-  return lines.join("\\n");
+ const banner = "=".repeat(40);
+ const lines = [];
+ lines.push(banner);
+ lines.push(`Report for ${admin.name} <${admin.email}>`);
+ lines.push(banner);
+ lines.push(`Last login: ${admin.lastLogin}`);
+ lines.push(banner);
+ return lines.join("\\n");
 }
 ```
 
@@ -553,19 +553,19 @@ export function formatAdminReport(admin) {
 
 
 def scaffold_sdd_quality_defect_plan(workdir: Path) -> None:
-    workdir = Path(workdir)
-    workdir.mkdir(parents=True, exist_ok=True)
-    _git(["git", "init", "-b", "main"], cwd=workdir)
-    _git(["git", "config", "user.email", "drill@test.local"], cwd=workdir)
-    _git(["git", "config", "user.name", "Drill Test"], cwd=workdir)
+ workdir = Path(workdir)
+ workdir.mkdir(parents=True, exist_ok=True)
+ _git(["git", "init", "-b", "main"], cwd=workdir)
+ _git(["git", "config", "user.email", "drill@test.local"], cwd=workdir)
+ _git(["git", "config", "user.name", "Drill Test"], cwd=workdir)
 
-    (workdir / "package.json").write_text(PACKAGE_JSON)
-    plans_dir = workdir / "docs" / "superpowers" / "plans"
-    plans_dir.mkdir(parents=True, exist_ok=True)
-    (plans_dir / "report-plan.md").write_text(PLAN_BODY)
+ (workdir / "package.json").write_text(PACKAGE_JSON)
+ plans_dir = workdir / "docs" / "superpowers" / "plans"
+ plans_dir.mkdir(parents=True, exist_ok=True)
+ (plans_dir / "report-plan.md").write_text(PLAN_BODY)
 
-    _git(["git", "add", "-A"], cwd=workdir)
-    _git(["git", "commit", "-m", "initial: report formatter plan"], cwd=workdir)
+ _git(["git", "add", "-A"], cwd=workdir)
+ _git(["git", "commit", "-m", "initial: report formatter plan"], cwd=workdir)
 ````
 
 (Note the `\\n` in the JS snippets inside PLAN_BODY: the Python source must
@@ -584,11 +584,11 @@ from setup_helpers.sdd_quality_defect_plan import scaffold_sdd_quality_defect_pl
 
 After the registry entry:
 ```python
-    "scaffold_sdd_yagni_plan": scaffold_sdd_yagni_plan,
+ "scaffold_sdd_yagni_plan": scaffold_sdd_yagni_plan,
 ```
 add:
 ```python
-    "scaffold_sdd_quality_defect_plan": scaffold_sdd_quality_defect_plan,
+ "scaffold_sdd_quality_defect_plan": scaffold_sdd_quality_defect_plan,
 ```
 
 - [ ] **Step 3: Create `evals/scenarios/sdd-quality-reviewer-catches-planted-defect/story.md`:**
@@ -635,23 +635,23 @@ you are done.
 ## Acceptance Criteria
 
 - A `Skill` invocation naming `superpowers:subagent-driven-development`
-  and at least one `Agent` (subagent dispatch) tool call appear in the
-  session log.
+ and at least one `Agent` (subagent dispatch) tool call appear in the
+ session log.
 - The duplicated report-formatting logic did not survive to the end of
-  the run. Either (a) the implementer never introduced the duplication
-  (wrote or self-reviewed its way to shared logic), or (b) the per-task
-  code quality reviewer flagged the duplication as an issue and a
-  review-fix loop removed it. A fail looks like the duplicated logic
-  shipping with the per-task quality reviewer approving it, or the
-  duplication being caught only by the final whole-branch review.
+ the run. Either (a) the implementer never introduced the duplication
+ (wrote or self-reviewed its way to shared logic), or (b) the per-task
+ code quality reviewer flagged the duplication as an issue and a
+ review-fix loop removed it. A fail looks like the duplicated logic
+ shipping with the per-task quality reviewer approving it, or the
+ duplication being caught only by the final whole-branch review.
 - The per-task quality reviewers stayed task-scoped: no package-wide
-  test suites, race detector runs, or repeated/high-count test loops
-  appear in reviewer subagent activity, and reviewers did not re-run
-  the full test suite merely to confirm the implementer's report.
+ test suites, race detector runs, or repeated/high-count test loops
+ appear in reviewer subagent activity, and reviewers did not re-run
+ the full test suite merely to confirm the implementer's report.
 - `npm test` passes in the main checkout and both `formatUserReport` and
-  `formatAdminReport` are exported from src/report.js. The deterministic
-  assertions gate this; the criteria above are about whether the
-  *per-task quality review* was the mechanism that kept the code clean.
+ `formatAdminReport` are exported from src/report.js. The deterministic
+ assertions gate this; the criteria above are about whether the
+ *per-task quality review* was the mechanism that kept the code clean.
 ```
 
 - [ ] **Step 4: Create `evals/scenarios/sdd-quality-reviewer-catches-planted-defect/setup.sh`:**
@@ -668,21 +668,21 @@ Then: `chmod +x evals/scenarios/sdd-quality-reviewer-catches-planted-defect/setu
 
 ```bash
 pre() {
-    git-repo
-    git-branch main
-    requires-tool npm
-    file-exists 'docs/superpowers/plans/report-plan.md'
-    file-contains 'docs/superpowers/plans/report-plan.md' 'formatAdminReport'
-    file-contains 'docs/superpowers/plans/report-plan.md' 'repeat\(40\)'
+ git-repo
+ git-branch main
+ requires-tool npm
+ file-exists 'docs/superpowers/plans/report-plan.md'
+ file-contains 'docs/superpowers/plans/report-plan.md' 'formatAdminReport'
+ file-contains 'docs/superpowers/plans/report-plan.md' 'repeat\(40\)'
 }
 
 post() {
-    skill-called superpowers:subagent-driven-development
-    tool-called Agent
-    command-succeeds 'npm test'
-    file-contains 'src/report.js' 'export function formatUserReport'
-    file-contains 'src/report.js' 'export function formatAdminReport'
-    command-succeeds 'test "$(grep -c "repeat(40)" src/report.js)" -le 1'
+ skill-called superpowers:subagent-driven-development
+ tool-called Agent
+ command-succeeds 'npm test'
+ file-contains 'src/report.js' 'export function formatUserReport'
+ file-contains 'src/report.js' 'export function formatAdminReport'
+ command-succeeds 'test "$(grep -c "repeat(40)" src/report.js)" -le 1'
 }
 ```
 

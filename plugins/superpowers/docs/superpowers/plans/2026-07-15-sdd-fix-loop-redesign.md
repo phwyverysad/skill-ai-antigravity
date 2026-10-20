@@ -1,4 +1,4 @@
-# SDD Fix-Loop Redesign Implementation Plan
+﻿# SDD Fix-Loop Redesign Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -15,13 +15,13 @@
 - **Verbatim-move rule:** eval-tuned sentences from the current SKILL.md move unchanged. Only fix-policy language may be reworded, and every rewording appears in Task 3's move map. Do not "improve" moved prose.
 - **Round cap:** 5 fix rounds per task. Rounds 1–3 resume the original implementer; rounds 4–5 dispatch a fresh implementer on a more capable model. Adjudication happens only at the cap; the one earlier exit is a finding that conflicts with plan text (human decides, existing behavior).
 - **Ledger line formats** (exact — scenarios grep for these; `<sha7>` = 7-char short SHA):
-  - `Task <N>: complete (commits <base7>..<head7>, review clean)`
-  - `Task <N>: complete (commits <base7>..<head7>, <K> parked)`
-  - `Task <N>: fix round <R>/5 (<X> addressed, <Y> open — <finding one-liner>[; <finding one-liner>…]; commits <a7>..<b7>)`
-  - `Task <N>: minor (deferred): <one-liner>`
-  - `Task <N>: parked — <finding one-liner> — ruling: <one-liner>`
-  - `Task <N>: BLOCKED — <one-liner>`
-  - Resume rule: a task is DONE iff it has a `Task <N>: complete` line.
+ - `Task <N>: complete (commits <base7>..<head7>, review clean)`
+ - `Task <N>: complete (commits <base7>..<head7>, <K> parked)`
+ - `Task <N>: fix round <R>/5 (<X> addressed, <Y> open — <finding one-liner>[; <finding one-liner>…]; commits <a7>..<b7>)`
+ - `Task <N>: minor (deferred): <one-liner>`
+ - `Task <N>: parked — <finding one-liner> — ruling: <one-liner>`
+ - `Task <N>: BLOCKED — <one-liner>`
+ - Resume rule: a task is DONE iff it has a `Task <N>: complete` line.
 - **Template placeholders** keep the existing bracket convention: `[MODEL]`, `[BRIEF_FILE]`, `[REPORT_FILE]`, `[BASE_SHA]`, `[HEAD_SHA]`, `[DIFF_FILE]`, `[GLOBAL_CONSTRAINTS]`; the new re-review template adds `[FINDINGS]`, `[FIX_BASE_SHA]`.
 - **Commit discipline:** superpowers commits on `sdd-fix-loop-redesign`; evals commits on `sdd-fix-loop-scenarios` (separate repo — `cd evals` first). Never commit one repo's work from the other.
 - **Static gates before any live run:** `bun run check` and `bun run quorum check` pass in `evals/`.
@@ -70,94 +70,94 @@ that the fix itself broke nothing.
 
 ```
 Subagent (general-purpose):
-  description: "Re-review Task N fix round R"
-  model: [MODEL — REQUIRED: choose per SKILL.md Model Selection; an omitted
-         model silently inherits the session's most expensive one]
-  prompt: |
-    You are re-reviewing one task's fix round. A previous review produced
-    findings; an implementer has attempted to fix them. Your job is to
-    verdict each finding and inspect the fix diff — nothing else.
+ description: "Re-review Task N fix round R"
+ model: [MODEL — REQUIRED: choose per SKILL.md Model Selection; an omitted
+ model silently inherits the session's most expensive one]
+ prompt: |
+ You are re-reviewing one task's fix round. A previous review produced
+ findings; an implementer has attempted to fix them. Your job is to
+ verdict each finding and inspect the fix diff — nothing else.
 
-    ## The Task
+ ## The Task
 
-    Read the task brief: [BRIEF_FILE]
+ Read the task brief: [BRIEF_FILE]
 
-    ## The Findings Under Verification
+ ## The Findings Under Verification
 
-    [FINDINGS]
+ [FINDINGS]
 
-    ## The Fix
+ ## The Fix
 
-    Read the implementer's report (fix reports are appended at the end):
-    [REPORT_FILE]
+ Read the implementer's report (fix reports are appended at the end):
+ [REPORT_FILE]
 
-    **Fix base:** [FIX_BASE_SHA] (the head the previous review saw)
-    **Head:** [HEAD_SHA]
-    **Diff file:** [DIFF_FILE]
+ **Fix base:** [FIX_BASE_SHA] (the head the previous review saw)
+ **Head:** [HEAD_SHA]
+ **Diff file:** [DIFF_FILE]
 
-    Read the diff file once — it contains the fix commits, a stat summary,
-    and the fix diff with surrounding context. Do not re-run git commands.
-    If the diff file is missing, fetch the diff yourself:
-    `git diff --stat [FIX_BASE_SHA]..[HEAD_SHA]` and
-    `git diff [FIX_BASE_SHA]..[HEAD_SHA]`.
+ Read the diff file once — it contains the fix commits, a stat summary,
+ and the fix diff with surrounding context. Do not re-run git commands.
+ If the diff file is missing, fetch the diff yourself:
+ `git diff --stat [FIX_BASE_SHA]..[HEAD_SHA]` and
+ `git diff [FIX_BASE_SHA]..[HEAD_SHA]`.
 
-    Your review is read-only on this checkout. Do not mutate the working
-    tree, the index, HEAD, or branch state in any way.
+ Your review is read-only on this checkout. Do not mutate the working
+ tree, the index, HEAD, or branch state in any way.
 
-    ## Scope
+ ## Scope
 
-    Your scope is the findings list and the fix diff. Verdict every finding.
-    Inspect the fix diff for new problems the fix itself introduced. Do NOT
-    re-review code the fix did not touch: if you notice an issue entirely
-    outside the fix diff, report it under Out-of-Scope Observations — it
-    does not block this task and does not extend the loop. A broad
-    whole-branch review happens after all tasks are complete.
+ Your scope is the findings list and the fix diff. Verdict every finding.
+ Inspect the fix diff for new problems the fix itself introduced. Do NOT
+ re-review code the fix did not touch: if you notice an issue entirely
+ outside the fix diff, report it under Out-of-Scope Observations — it
+ does not block this task and does not extend the loop. A broad
+ whole-branch review happens after all tasks are complete.
 
-    ## Tests
+ ## Tests
 
-    The implementer re-ran the tests covering the amended code and appended
-    the results to the report file. Treat the report as unverified claims:
-    confirm the fix report names the covering tests and shows their output,
-    and verify the claims against the diff. Do not re-run the suite to
-    confirm their report. Run a test only when reading the code raises a
-    specific doubt that no existing run answers — and then a focused test,
-    never a package-wide suite.
+ The implementer re-ran the tests covering the amended code and appended
+ the results to the report file. Treat the report as unverified claims:
+ confirm the fix report names the covering tests and shows their output,
+ and verify the claims against the diff. Do not re-run the suite to
+ confirm their report. Run a test only when reading the code raises a
+ specific doubt that no existing run answers — and then a focused test,
+ never a package-wide suite.
 
-    ## Output Format
+ ## Output Format
 
-    Your final message is the report itself: begin directly with the first
-    finding's verdict. Every line is a verdict, a finding with file:line,
-    or a check you ran — no preamble, no process narration.
+ Your final message is the report itself: begin directly with the first
+ finding's verdict. Every line is a verdict, a finding with file:line,
+ or a check you ran — no preamble, no process narration.
 
-    ### Finding Verdicts
+ ### Finding Verdicts
 
-    For each finding in The Findings Under Verification, in order:
-    - **[finding one-liner]** — ADDRESSED | NOT ADDRESSED, with file:line
-      evidence. "Attempted" is not addressed: the specific defect must no
-      longer exist.
+ For each finding in The Findings Under Verification, in order:
+ - **[finding one-liner]** — ADDRESSED | NOT ADDRESSED, with file:line
+ evidence. "Attempted" is not addressed: the specific defect must no
+ longer exist.
 
-    ### New Breakage in the Fix Diff
+ ### New Breakage in the Fix Diff
 
-    Anything the fix itself broke or introduced, with severity
-    (Critical/Important/Minor) and file:line. "None" if clean.
+ Anything the fix itself broke or introduced, with severity
+ (Critical/Important/Minor) and file:line. "None" if clean.
 
-    ### Out-of-Scope Observations
+ ### Out-of-Scope Observations
 
-    Issues you noticed entirely outside the fix diff. Non-blocking; the
-    controller ledgers these for the final review. "None" if none.
+ Issues you noticed entirely outside the fix diff. Non-blocking; the
+ controller ledgers these for the final review. "None" if none.
 
-    ### Verdict
+ ### Verdict
 
-    **Fix round:** [All findings addressed, no new Critical/Important
-    breakage | Findings remain open] — list the open ones.
+ **Fix round:** [All findings addressed, no new Critical/Important
+ breakage | Findings remain open] — list the open ones.
 ```
 
 **Placeholders:**
 - `[MODEL]` — REQUIRED: reviewer model per SKILL.md Model Selection; scoped
-  re-reviews of small fix diffs take a cheap-to-mid tier
+ re-reviews of small fix diffs take a cheap-to-mid tier
 - `[BRIEF_FILE]` — the task brief file (same file the implementer worked from)
 - `[FINDINGS]` — the Critical/Important findings and spec gaps from the
-  previous review, copied verbatim, one per bullet
+ previous review, copied verbatim, one per bullet
 - `[REPORT_FILE]` — the implementer's report file (fix reports appended)
 - `[FIX_BASE_SHA]` — the head the previous review saw
 - `[HEAD_SHA]` — current commit
@@ -200,24 +200,24 @@ git commit -m "feat(sdd): add scoped re-review prompt template"
 Old text (exact):
 
 ```markdown
-    ## After Review Findings
+ ## After Review Findings
 
-    If a reviewer finds issues and you fix them, re-run the tests that cover
-    the amended code and append the results to your report file. Reviewers
-    will not re-run tests for you — your report is the test evidence.
+ If a reviewer finds issues and you fix them, re-run the tests that cover
+ the amended code and append the results to your report file. Reviewers
+ will not re-run tests for you — your report is the test evidence.
 ```
 
 New text (exact):
 
 ```markdown
-    ## After Review Findings
+ ## After Review Findings
 
-    If the task review finds issues, you will be resumed with the findings.
-    Fix them, re-run the tests that cover the amended code, and append a fix
-    report to your report file: what you changed, the covering tests you
-    ran, the command, and the output. Reviewers will not re-run tests for
-    you — your report is the test evidence. Then reply with the same short
-    status contract as your first report.
+ If the task review finds issues, you will be resumed with the findings.
+ Fix them, re-run the tests that cover the amended code, and append a fix
+ report to your report file: what you changed, the covering tests you
+ ran, the command, and the output. Reviewers will not re-run tests for
+ you — your report is the test evidence. Then reply with the same short
+ status contract as your first report.
 ```
 
 - [ ] **Step 2: Delete the trailing re-review paragraph in task-reviewer-prompt.md**
@@ -297,19 +297,19 @@ ledger and the tool results carry the record.
 
 ```dot
 digraph when_to_use {
-    "Have implementation plan?" [shape=diamond];
-    "Tasks mostly independent?" [shape=diamond];
-    "Stay in this session?" [shape=diamond];
-    "subagent-driven-development" [shape=box];
-    "executing-plans" [shape=box];
-    "Manual execution or brainstorm first" [shape=box];
+ "Have implementation plan?" [shape=diamond];
+ "Tasks mostly independent?" [shape=diamond];
+ "Stay in this session?" [shape=diamond];
+ "subagent-driven-development" [shape=box];
+ "executing-plans" [shape=box];
+ "Manual execution or brainstorm first" [shape=box];
 
-    "Have implementation plan?" -> "Tasks mostly independent?" [label="yes"];
-    "Have implementation plan?" -> "Manual execution or brainstorm first" [label="no"];
-    "Tasks mostly independent?" -> "Stay in this session?" [label="yes"];
-    "Tasks mostly independent?" -> "Manual execution or brainstorm first" [label="no - tightly coupled"];
-    "Stay in this session?" -> "subagent-driven-development" [label="yes"];
-    "Stay in this session?" -> "executing-plans" [label="no - parallel session"];
+ "Have implementation plan?" -> "Tasks mostly independent?" [label="yes"];
+ "Have implementation plan?" -> "Manual execution or brainstorm first" [label="no"];
+ "Tasks mostly independent?" -> "Stay in this session?" [label="yes"];
+ "Tasks mostly independent?" -> "Manual execution or brainstorm first" [label="no - tightly coupled"];
+ "Stay in this session?" -> "subagent-driven-development" [label="yes"];
+ "Stay in this session?" -> "executing-plans" [label="no - parallel session"];
 }
 ```
 
@@ -323,62 +323,62 @@ digraph when_to_use {
 
 ```dot
 digraph process {
-    rankdir=TB;
+ rankdir=TB;
 
-    subgraph cluster_per_task {
-        label="Per Task";
-        "Dispatch implementer subagent (./implementer-prompt.md)" [shape=box];
-        "Implementer asks questions?" [shape=diamond];
-        "Answer questions, provide context" [shape=box];
-        "Implementer implements, tests, commits, self-reviews" [shape=box];
-        "Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)" [shape=box];
-        "Spec ✅ and quality approved?" [shape=diamond];
-        "Finding conflicts with plan text?" [shape=diamond];
-        "Ask human partner which governs" [shape=box];
-        "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" [shape=box];
-        "Dispatch scoped re-review (./re-review-prompt.md)" [shape=box];
-        "All findings addressed?" [shape=diamond];
-        "R = 5?" [shape=diamond];
-        "Adjudicate each open finding" [shape=box];
-        "Any load-bearing finding?" [shape=diamond];
-        "STOP: report BLOCKED to human partner" [shape=box];
-        "Park findings in ledger with rulings" [shape=box];
-        "Append completion to ledger, mark todo complete" [shape=box];
-    }
+ subgraph cluster_per_task {
+ label="Per Task";
+ "Dispatch implementer subagent (./implementer-prompt.md)" [shape=box];
+ "Implementer asks questions?" [shape=diamond];
+ "Answer questions, provide context" [shape=box];
+ "Implementer implements, tests, commits, self-reviews" [shape=box];
+ "Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)" [shape=box];
+ "Spec and quality approved?" [shape=diamond];
+ "Finding conflicts with plan text?" [shape=diamond];
+ "Ask human partner which governs" [shape=box];
+ "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" [shape=box];
+ "Dispatch scoped re-review (./re-review-prompt.md)" [shape=box];
+ "All findings addressed?" [shape=diamond];
+ "R = 5?" [shape=diamond];
+ "Adjudicate each open finding" [shape=box];
+ "Any load-bearing finding?" [shape=diamond];
+ "STOP: report BLOCKED to human partner" [shape=box];
+ "Park findings in ledger with rulings" [shape=box];
+ "Append completion to ledger, mark todo complete" [shape=box];
+ }
 
-    "Setup: worktree, ledger check, read plan, pre-flight review" [shape=box];
-    "More tasks remain?" [shape=diamond];
-    "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" [shape=box];
-    "Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals" [shape=box];
-    "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
+ "Setup: worktree, ledger check, read plan, pre-flight review" [shape=box];
+ "More tasks remain?" [shape=diamond];
+ "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" [shape=box];
+ "Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals" [shape=box];
+ "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
-    "Setup: worktree, ledger check, read plan, pre-flight review" -> "Dispatch implementer subagent (./implementer-prompt.md)";
-    "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer asks questions?";
-    "Implementer asks questions?" -> "Answer questions, provide context" [label="yes"];
-    "Answer questions, provide context" -> "Implementer implements, tests, commits, self-reviews";
-    "Implementer asks questions?" -> "Implementer implements, tests, commits, self-reviews" [label="no"];
-    "Implementer implements, tests, commits, self-reviews" -> "Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)";
-    "Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)" -> "Spec ✅ and quality approved?";
-    "Spec ✅ and quality approved?" -> "Append completion to ledger, mark todo complete" [label="yes"];
-    "Spec ✅ and quality approved?" -> "Finding conflicts with plan text?" [label="no"];
-    "Finding conflicts with plan text?" -> "Ask human partner which governs" [label="yes"];
-    "Ask human partner which governs" -> "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model";
-    "Finding conflicts with plan text?" -> "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no"];
-    "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" -> "Dispatch scoped re-review (./re-review-prompt.md)";
-    "Dispatch scoped re-review (./re-review-prompt.md)" -> "All findings addressed?";
-    "All findings addressed?" -> "Append completion to ledger, mark todo complete" [label="yes"];
-    "All findings addressed?" -> "R = 5?" [label="no"];
-    "R = 5?" -> "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no - next round"];
-    "R = 5?" -> "Adjudicate each open finding" [label="yes - breaker trips"];
-    "Adjudicate each open finding" -> "Any load-bearing finding?";
-    "Any load-bearing finding?" -> "STOP: report BLOCKED to human partner" [label="yes"];
-    "Any load-bearing finding?" -> "Park findings in ledger with rulings" [label="no"];
-    "Park findings in ledger with rulings" -> "Append completion to ledger, mark todo complete";
-    "Append completion to ledger, mark todo complete" -> "More tasks remain?";
-    "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
-    "More tasks remain?" -> "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" [label="no"];
-    "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" -> "Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals";
-    "Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals" -> "Use superpowers:finishing-a-development-branch";
+ "Setup: worktree, ledger check, read plan, pre-flight review" -> "Dispatch implementer subagent (./implementer-prompt.md)";
+ "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer asks questions?";
+ "Implementer asks questions?" -> "Answer questions, provide context" [label="yes"];
+ "Answer questions, provide context" -> "Implementer implements, tests, commits, self-reviews";
+ "Implementer asks questions?" -> "Implementer implements, tests, commits, self-reviews" [label="no"];
+ "Implementer implements, tests, commits, self-reviews" -> "Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)";
+ "Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)" -> "Spec and quality approved?";
+ "Spec and quality approved?" -> "Append completion to ledger, mark todo complete" [label="yes"];
+ "Spec and quality approved?" -> "Finding conflicts with plan text?" [label="no"];
+ "Finding conflicts with plan text?" -> "Ask human partner which governs" [label="yes"];
+ "Ask human partner which governs" -> "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model";
+ "Finding conflicts with plan text?" -> "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no"];
+ "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" -> "Dispatch scoped re-review (./re-review-prompt.md)";
+ "Dispatch scoped re-review (./re-review-prompt.md)" -> "All findings addressed?";
+ "All findings addressed?" -> "Append completion to ledger, mark todo complete" [label="yes"];
+ "All findings addressed?" -> "R = 5?" [label="no"];
+ "R = 5?" -> "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no - next round"];
+ "R = 5?" -> "Adjudicate each open finding" [label="yes - breaker trips"];
+ "Adjudicate each open finding" -> "Any load-bearing finding?";
+ "Any load-bearing finding?" -> "STOP: report BLOCKED to human partner" [label="yes"];
+ "Any load-bearing finding?" -> "Park findings in ledger with rulings" [label="no"];
+ "Park findings in ledger with rulings" -> "Append completion to ledger, mark todo complete";
+ "Append completion to ledger, mark todo complete" -> "More tasks remain?";
+ "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
+ "More tasks remain?" -> "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" [label="no"];
+ "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" -> "Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals";
+ "Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals" -> "Use superpowers:finishing-a-development-branch";
 }
 ```
 
@@ -395,15 +395,15 @@ sequences — the single most expensive failure observed. Track progress in
 a ledger file, not only in todos.
 
 - At skill start, check for a ledger:
-  `cat "$(git rev-parse --show-toplevel)/.superpowers/sdd/progress.md"`. Tasks with
-  a `Task <N>: complete` line are DONE — do not re-dispatch them; resume at
-  the first task without one. A task whose last line is a fix round is
-  mid-loop: resume the loop at the next round.
+ `cat "$(git rev-parse --show-toplevel)/.superpowers/sdd/progress.md"`. Tasks with
+ a `Task <N>: complete` line are DONE — do not re-dispatch them; resume at
+ the first task without one. A task whose last line is a fix round is
+ mid-loop: resume the loop at the next round.
 - The ledger is your recovery map: the commits it names exist in git even
-  when your context no longer remembers creating them. After compaction,
-  trust the ledger and `git log` over your own recollection.
+ when your context no longer remembers creating them. After compaction,
+ trust the ledger and `git log` over your own recollection.
 - `git clean -fdx` will destroy the ledger (it's git-ignored scratch); if
-  that happens, recover from `git log`.
+ that happens, recover from `git log`.
 
 Read the plan once, note its context and Global Constraints, and create a
 todo per task.
@@ -412,7 +412,7 @@ Before dispatching Task 1, scan the plan once for conflicts:
 
 - tasks that contradict each other or the plan's Global Constraints
 - anything the plan explicitly mandates that the review rubric treats as a
-  defect (a test that asserts nothing, verbatim duplication of a logic block)
+ defect (a test that asserts nothing, verbatim duplication of a logic block)
 
 Present everything you find to your human partner as one batched question —
 each finding beside the plan text that mandates it, asking which governs —
@@ -469,29 +469,29 @@ Record BASE (`git rev-parse HEAD`) before dispatching — the review package
 and fix-round diffs need it.
 
 - **Task brief:** run this skill's `scripts/task-brief PLAN_FILE N` — it
-  extracts the task's full text to a uniquely named file and prints the
-  path. Compose the dispatch so the brief stays the single source of
-  requirements. Your dispatch should contain: (1) one line on where this
-  task fits in the project; (2) the brief path, introduced as "read this
-  first — it is your requirements, with the exact values to use verbatim";
-  (3) interfaces and decisions from earlier tasks that the brief cannot
-  know; (4) your resolution of any ambiguity you noticed in the brief;
-  (5) the report-file path and report contract. Exact values (numbers,
-  magic strings, signatures, test cases) appear only in the brief. Never
-  make a subagent read the whole plan file.
+ extracts the task's full text to a uniquely named file and prints the
+ path. Compose the dispatch so the brief stays the single source of
+ requirements. Your dispatch should contain: (1) one line on where this
+ task fits in the project; (2) the brief path, introduced as "read this
+ first — it is your requirements, with the exact values to use verbatim";
+ (3) interfaces and decisions from earlier tasks that the brief cannot
+ know; (4) your resolution of any ambiguity you noticed in the brief;
+ (5) the report-file path and report contract. Exact values (numbers,
+ magic strings, signatures, test cases) appear only in the brief. Never
+ make a subagent read the whole plan file.
 - **Report file:** name the implementer's report file after the brief
-  (brief `…/task-N-brief.md` → report `…/task-N-report.md`) and put it in
-  the dispatch prompt. The implementer writes the full report there and
-  returns only status, commits, a one-line test summary, and concerns.
+ (brief `…/task-N-brief.md` → report `…/task-N-report.md`) and put it in
+ the dispatch prompt. The implementer writes the full report there and
+ returns only status, commits, a one-line test summary, and concerns.
 - A dispatch prompt describes one task, not the session's history. Do not
-  paste accumulated prior-task summaries ("state after Tasks 1-3") into
-  later dispatches — a real session's dispatch hit 42k chars of which 99%
-  was pasted history. A fresh subagent needs its task, the interfaces it
-  touches, and the global constraints. Nothing else.
+ paste accumulated prior-task summaries ("state after Tasks 1-3") into
+ later dispatches — a real session's dispatch hit 42k chars of which 99%
+ was pasted history. A fresh subagent needs its task, the interfaces it
+ touches, and the global constraints. Nothing else.
 - If an earlier task parked a finding in the area this task touches, carry
-  a pointer to that ledger entry in the dispatch.
+ a pointer to that ledger entry in the dispatch.
 - Record the implementer's agent identity from the dispatch result —
-  fix-loop rounds 1-3 resume this agent.
+ fix-loop rounds 1-3 resume this agent.
 - Never dispatch multiple implementation subagents in parallel (conflicts).
 
 Template: [implementer-prompt.md](implementer-prompt.md)
@@ -527,36 +527,36 @@ required. Implementer self-review never replaces the task review; both are
 needed.
 
 - Hand the reviewer its diff as a file: run this skill's
-  `scripts/review-package BASE HEAD` and pass the reviewer the file path
-  it prints (or, without bash: `git log --oneline`, `git diff --stat`,
-  and `git diff -U10` for the range, redirected to one uniquely named
-  file). The output never enters your own context, and the reviewer sees
-  the commit list, stat summary, and full diff with context in one Read
-  call. Use the BASE you recorded before dispatching the implementer —
-  never `HEAD~1`, which silently truncates multi-commit tasks. Never
-  dispatch a task reviewer without a diff file.
+ `scripts/review-package BASE HEAD` and pass the reviewer the file path
+ it prints (or, without bash: `git log --oneline`, `git diff --stat`,
+ and `git diff -U10` for the range, redirected to one uniquely named
+ file). The output never enters your own context, and the reviewer sees
+ the commit list, stat summary, and full diff with context in one Read
+ call. Use the BASE you recorded before dispatching the implementer —
+ never `HEAD~1`, which silently truncates multi-commit tasks. Never
+ dispatch a task reviewer without a diff file.
 - The task reviewer gets three paths — the same brief file, the report
-  file, and the review package — plus the global constraints that bind
-  the task.
+ file, and the review package — plus the global constraints that bind
+ the task.
 - The global-constraints block you hand the reviewer is its attention
-  lens. Copy the binding requirements verbatim from the plan's Global
-  Constraints section or the spec: exact values, exact formats, and the
-  stated relationships between components ("same layout as X", "matches
-  Y"). The reviewer's template already carries the process rules (YAGNI,
-  test hygiene, review method) — the constraints block is for what THIS
-  project's spec demands.
+ lens. Copy the binding requirements verbatim from the plan's Global
+ Constraints section or the spec: exact values, exact formats, and the
+ stated relationships between components ("same layout as X", "matches
+ Y"). The reviewer's template already carries the process rules (YAGNI,
+ test hygiene, review method) — the constraints block is for what THIS
+ project's spec demands.
 - Do not add open-ended directives like "check all uses" or "run race tests
-  if useful" without a concrete, task-specific reason
+ if useful" without a concrete, task-specific reason
 - Do not ask a reviewer to re-run tests the implementer already ran on the
-  same code — the implementer's report carries the test evidence
+ same code — the implementer's report carries the test evidence
 - Do not pre-judge findings for the reviewer — never instruct a reviewer to
-  ignore or not flag a specific issue. If you believe a finding would be a
-  false positive, let the reviewer raise it and adjudicate it in the review
-  loop. If the prompt you are writing contains "do not flag," "don't treat X
-  as a defect," "at most Minor," or "the plan chose" — stop: you are
-  pre-judging, usually to spare yourself a review loop.
+ ignore or not flag a specific issue. If you believe a finding would be a
+ false positive, let the reviewer raise it and adjudicate it in the review
+ loop. If the prompt you are writing contains "do not flag," "don't treat X
+ as a defect," "at most Minor," or "the plan chose" — stop: you are
+ pre-judging, usually to spare yourself a review loop.
 
-The task reviewer may report "⚠️ Cannot verify from diff" items — requirements
+The task reviewer may report "️ Cannot verify from diff" items — requirements
 that live in unchanged code or span tasks. These do not block the rest of the
 review, but you must resolve each one yourself before marking the task
 complete: you hold the plan and cross-task context the reviewer
@@ -567,21 +567,21 @@ Template: [task-reviewer-prompt.md](task-reviewer-prompt.md)
 
 ### 4. The fix loop
 
-The loop triggers when the review reports spec ❌, any Critical or Important
-finding, or a ⚠️ item you confirmed as a real gap.
+The loop triggers when the review reports spec , any Critical or Important
+finding, or a ️ item you confirmed as a real gap.
 
 Before the loop starts, two routes leave it immediately:
 
 - Record Minor findings in the progress ledger as you go
-  (`Task <N>: minor (deferred): <one-liner>`), and point the final
-  whole-branch review at that list so it can triage which must be fixed
-  before merge. A roll-up nobody reads is a silent discard. Minor findings
-  never enter the loop.
+ (`Task <N>: minor (deferred): <one-liner>`), and point the final
+ whole-branch review at that list so it can triage which must be fixed
+ before merge. A roll-up nobody reads is a silent discard. Minor findings
+ never enter the loop.
 - A finding labeled plan-mandated — or any finding that conflicts with
-  what the plan's text requires — is the human's decision, like any plan
-  contradiction: present the finding and the plan text, ask which governs.
-  Do not dismiss the finding because the plan mandates it, and do not
-  dispatch a fix that contradicts the plan without asking.
+ what the plan's text requires — is the human's decision, like any plan
+ contradiction: present the finding and the plan text, ask which governs.
+ Do not dismiss the finding because the plan mandates it, and do not
+ dispatch a fix that contradicts the plan without asking.
 
 Everything else enters the loop. A fix round is one fix dispatch plus one
 scoped re-review. Five rounds maximum per task:
@@ -627,15 +627,15 @@ dispatching. Adjudicate each open finding yourself — you hold the plan and
 the cross-task context the reviewer lacks:
 
 - **The reviewer is wrong, or the point is contestable:** park it —
-  `Task <N>: parked — <finding> — ruling: <why the code stands>`. The final
-  review sees both sides.
+ `Task <N>: parked — <finding> — ruling: <why the code stands>`. The final
+ review sees both sides.
 - **Real, but nothing downstream builds on it:** park it the same way, with
-  a ruling that says it's real and deferred.
+ a ruling that says it's real and deferred.
 - **Real and load-bearing** — a later task builds on it, or it reveals a
-  plan defect: STOP. Append `Task <N>: BLOCKED — <reason>` and report to
-  your human partner with the finding, the plan text it collides with, and
-  the fix history. Parking a structural failure lets every dependent task
-  build on it and hands the final review a problem it cannot fix either.
+ plan defect: STOP. Append `Task <N>: BLOCKED — <reason>` and report to
+ your human partner with the finding, the plan text it collides with, and
+ the fix history. Parking a structural failure lets every dependent task
+ build on it and hands the final review a problem it cannot fix either.
 
 Adjudicate only at the cap. Adjudicating earlier to end a loop is
 pre-judging with a different name. Every adjudication is a ledger entry —
@@ -649,7 +649,7 @@ message as your other bookkeeping:
 
 - `Task <N>: complete (commits <base7>..<head7>, review clean)`
 - `Task <N>: complete (commits <base7>..<head7>, <K> parked)` after a
-  tripped breaker
+ tripped breaker
 
 Then mark the todo complete and move on. Never move to the next task while
 the review has open Critical/Important issues that are neither fixed nor
@@ -712,14 +712,14 @@ Implementer: "Before I begin - should the hook be installed at user or system le
 You: "User level (~/.config/superpowers/hooks/)"
 
 Implementer: [Later]
-  - Implemented install-hook command
-  - Added tests, 5/5 passing
-  - Self-review: Found I missed --force flag, added it
-  - Committed
+ - Implemented install-hook command
+ - Added tests, 5/5 passing
+ - Self-review: Found I missed --force flag, added it
+ - Committed
 
 [Run review-package, dispatch task reviewer with the printed path]
-Task reviewer: Spec ✅ - all requirements met, nothing extra.
-  Strengths: Good test coverage, clean. Issues: None. Task quality: Approved.
+Task reviewer: Spec - all requirements met, nothing extra.
+ Strengths: Good test coverage, clean. Issues: None. Task quality: Approved.
 
 [Ledger: Task 1: complete (commits a1b2c3d..d4e5f6a, review clean)]
 
@@ -728,23 +728,23 @@ Task 2: Recovery modes
 [Run task-brief for Task 2; dispatch implementer with brief + report paths + context]
 
 Implementer: [No questions]
-  - Added verify/repair modes
-  - 8/8 tests passing
-  - Committed
+ - Added verify/repair modes
+ - 8/8 tests passing
+ - Committed
 
 [Run review-package, dispatch task reviewer with the printed path]
-Task reviewer: Spec ❌:
-  - Missing: Progress reporting (spec says "report every 100 items")
-  Issues (Important): Magic number (100)
+Task reviewer: Spec :
+ - Missing: Progress reporting (spec says "report every 100 items")
+ Issues (Important): Magic number (100)
 
 [Fix round 1: resume the implementer with both findings]
 Implementer: Added progress reporting, extracted PROGRESS_INTERVAL constant.
-  Re-ran test/recovery.test.js — 10/10 passing. Fix report appended.
+ Re-ran test/recovery.test.js — 10/10 passing. Fix report appended.
 
 [Run review-package FIX_BASE HEAD; dispatch scoped re-review]
 Re-reviewer: Missing progress reporting — ADDRESSED (src/recovery.js:41).
-  Magic number — ADDRESSED (src/recovery.js:7). New breakage: none.
-  Verdict: all findings addressed.
+ Magic number — ADDRESSED (src/recovery.js:7). New breakage: none.
+ Verdict: all findings addressed.
 
 [Ledger: Task 2: fix round 1/5 (2 addressed, 0 open; commits d4e5f6a..b7c8d9e)]
 [Ledger: Task 2: complete (commits d4e5f6a..b7c8d9e, review clean)]
@@ -775,7 +775,7 @@ the new file; fix any drift toward paraphrase.
 | lines 90-100 | pre-flight scan | Setup (last ¶s) | Verbatim |
 | lines 104-133 | model selection | Model Selection | Verbatim + two additions: re-review tier sentence; "Fix-loop escalation (rounds 4-5)" block |
 | lines 137-151 | implementer statuses | Task Loop §2 | Verbatim |
-| lines 153-160 | ⚠️ handling | Task Loop §3 (last ¶) | Reworded ending: "send it back to the implementer and re-review" → "it enters the fix loop with the other findings" |
+| lines 153-160 | ️ handling | Task Loop §3 (last ¶) | Reworded ending: "send it back to the implementer and re-review" → "it enters the fix loop with the other findings" |
 | lines 166-177 | no open-ended directives; no test re-runs; no pre-judging | Task Loop §3 bullets | Verbatim |
 | lines 178-183 | constraints lens | Task Loop §3 bullet | Verbatim |
 | lines 184-191 | diff as a file | Task Loop §3 first bullet | Verbatim + appended "Never dispatch a task reviewer without a diff file." (from Never item) |
@@ -850,54 +850,54 @@ git checkout -b sdd-fix-loop-scenarios
 Append to `evals/test/setup-helpers-sdd.test.ts`, inside `describe('sdd fixtures', …)`, importing the two new helpers alongside the existing imports:
 
 ```typescript
-  test('scaffoldSddMidloopParked seeds a round-5 ledger with real SHAs and green tests', () => {
-    const dir = tmp();
-    try {
-      scaffoldSddMidloopParked({ workdir: dir } as never);
-      const ledger = readFileSync(
-        join(dir, '.superpowers/sdd/progress.md'),
-        'utf8',
-      );
-      expect(ledger).toContain('Task 1: complete (commits ');
-      expect(ledger).toContain('fix round 5/5 (0 addressed, 1 open — ');
-      expect(ledger).not.toContain('Task 2: complete');
-      expect(ledger).not.toContain('Task 3:');
-      // Ledger SHAs are real commits in the fixture repo.
-      const head = runGit(['rev-parse', '--short=7', 'HEAD'], dir).trim();
-      expect(ledger).toContain(head);
-      // The open finding exists in the code: triplicated pad-and-join expression.
-      const duration = readFileSync(join(dir, 'src/duration.js'), 'utf8');
-      expect(
-        duration.split('String(s).padStart(2, "0")').length - 1,
-      ).toBeGreaterThanOrEqual(3);
-      expect(existsSync(join(dir, 'src/summary.js'))).toBe(false);
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
-    }
-  });
+ test('scaffoldSddMidloopParked seeds a round-5 ledger with real SHAs and green tests', () => {
+ const dir = tmp();
+ try {
+ scaffoldSddMidloopParked({ workdir: dir } as never);
+ const ledger = readFileSync(
+ join(dir, '.superpowers/sdd/progress.md'),
+ 'utf8',
+ );
+ expect(ledger).toContain('Task 1: complete (commits ');
+ expect(ledger).toContain('fix round 5/5 (0 addressed, 1 open — ');
+ expect(ledger).not.toContain('Task 2: complete');
+ expect(ledger).not.toContain('Task 3:');
+ // Ledger SHAs are real commits in the fixture repo.
+ const head = runGit(['rev-parse', '--short=7', 'HEAD'], dir).trim();
+ expect(ledger).toContain(head);
+ // The open finding exists in the code: triplicated pad-and-join expression.
+ const duration = readFileSync(join(dir, 'src/duration.js'), 'utf8');
+ expect(
+ duration.split('String(s).padStart(2, "0")').length - 1,
+ ).toBeGreaterThanOrEqual(3);
+ expect(existsSync(join(dir, 'src/summary.js'))).toBe(false);
+ } finally {
+ rmSync(dir, { recursive: true, force: true });
+ }
+ });
 
-  test('scaffoldSddMidloopStructural seeds a plan-contradiction finding', () => {
-    const dir = tmp();
-    try {
-      scaffoldSddMidloopStructural({ workdir: dir } as never);
-      const ledger = readFileSync(
-        join(dir, '.superpowers/sdd/progress.md'),
-        'utf8',
-      );
-      expect(ledger).toContain('fix round 5/5 (0 addressed, 1 open — ');
-      expect(ledger).toContain('milliseconds');
-      const plan = readFileSync(
-        join(dir, 'docs/superpowers/plans/metrics-plan.md'),
-        'utf8',
-      );
-      // Task 2 defines seconds; Task 3 passes milliseconds — the seeded contradiction.
-      expect(plan).toContain('formatDuration(seconds)');
-      expect(plan).toContain('durationMs');
-      expect(existsSync(join(dir, 'src/summary.js'))).toBe(false);
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
-    }
-  });
+ test('scaffoldSddMidloopStructural seeds a plan-contradiction finding', () => {
+ const dir = tmp();
+ try {
+ scaffoldSddMidloopStructural({ workdir: dir } as never);
+ const ledger = readFileSync(
+ join(dir, '.superpowers/sdd/progress.md'),
+ 'utf8',
+ );
+ expect(ledger).toContain('fix round 5/5 (0 addressed, 1 open — ');
+ expect(ledger).toContain('milliseconds');
+ const plan = readFileSync(
+ join(dir, 'docs/superpowers/plans/metrics-plan.md'),
+ 'utf8',
+ );
+ // Task 2 defines seconds; Task 3 passes milliseconds — the seeded contradiction.
+ expect(plan).toContain('formatDuration(seconds)');
+ expect(plan).toContain('durationMs');
+ expect(existsSync(join(dir, 'src/summary.js'))).toBe(false);
+ } finally {
+ rmSync(dir, { recursive: true, force: true });
+ }
+ });
 ```
 
 Add `readFileSync` to the `node:fs` import line at the top of the file.
@@ -913,12 +913,12 @@ Append to `evals/src/setup-helpers/sdd-fixtures.ts`:
 
 ```typescript
 const MIDLOOP_PACKAGE_JSON = `{
-  "name": "metrics-formatter",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "test": "node --test"
-  }
+ "name": "metrics-formatter",
+ "version": "1.0.0",
+ "type": "module",
+ "scripts": {
+ "test": "node --test"
+ }
 }
 `;
 
@@ -927,7 +927,7 @@ const MIDLOOP_PACKAGE_JSON = `{
 // structural variant's Task 3 passes milliseconds (contradicts Task 2's
 // seconds contract — the open finding is a plan defect Task 3 builds on).
 function midloopPlanBody(task3Arg: 'durationSeconds' | 'durationMs'): string {
-  return `# Metrics Formatter — Implementation Plan
+ return `# Metrics Formatter — Implementation Plan
 
 Three formatting functions for a metrics dashboard. Implement exactly what
 each task specifies.
@@ -975,10 +975,10 @@ returns \`"1:05"\`.
 **Requirements:**
 - Function named \`summarize\`
 - Takes one parameter \`metrics\`: an object with \`events\` (integer) and
-  \`${task3Arg}\` (integer)
+ \`${task3Arg}\` (integer)
 - Returns \`<formatted events> events in <formatted duration>\`, using
-  \`formatCount\` for the events and \`formatDuration(metrics.${task3Arg})\`
-  for the duration
+ \`formatCount\` for the events and \`formatDuration(metrics.${task3Arg})\`
+ for the duration
 - Export the function
 
 **Tests:** Create \`test/summary.test.js\` verifying
@@ -990,23 +990,23 @@ returns \`"1:05"\`.
 }
 
 const MIDLOOP_COUNT_JS = `export function formatCount(n) {
-  return String(n).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");
+ return String(n).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");
 }
 `;
 
 // The seeded Important finding: the pad-and-join expression appears three
 // times. Behavior is correct (tests pass); the finding is quality-only.
 const MIDLOOP_DURATION_JS = `export function formatDuration(seconds) {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
-  if (h > 0) {
-    return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-  }
-  if (m > 0) {
-    return m + ":" + String(s).padStart(2, "0");
-  }
-  return "0:" + String(s).padStart(2, "0");
+ const h = Math.floor(seconds / 3600);
+ const m = Math.floor((seconds % 3600) / 60);
+ const s = seconds % 60;
+ if (h > 0) {
+ return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+ }
+ if (m > 0) {
+ return m + ":" + String(s).padStart(2, "0");
+ }
+ return "0:" + String(s).padStart(2, "0");
 }
 `;
 
@@ -1015,11 +1015,11 @@ import assert from "node:assert/strict";
 import { formatCount } from "../src/count.js";
 
 test("formatCount separates thousands", () => {
-  assert.equal(formatCount(12345), "12,345");
+ assert.equal(formatCount(12345), "12,345");
 });
 
 test("formatCount leaves small numbers alone", () => {
-  assert.equal(formatCount(7), "7");
+ assert.equal(formatCount(7), "7");
 });
 `;
 
@@ -1028,88 +1028,88 @@ import assert from "node:assert/strict";
 import { formatDuration } from "../src/duration.js";
 
 test("formatDuration formats hours", () => {
-  assert.equal(formatDuration(3661), "1:01:01");
+ assert.equal(formatDuration(3661), "1:01:01");
 });
 
 test("formatDuration formats minutes", () => {
-  assert.equal(formatDuration(65), "1:05");
+ assert.equal(formatDuration(65), "1:05");
 });
 `;
 
 interface MidloopOptions {
-  task3Arg: 'durationSeconds' | 'durationMs';
-  openFinding: string;
+ task3Arg: 'durationSeconds' | 'durationMs';
+ openFinding: string;
 }
 
 // Builds a repo mid-SDD-execution: Task 1 complete, Task 2 at fix round 5/5
 // with one open finding, Task 3 unstarted. The ledger's SHAs are the real
 // fixture commits so a resuming controller can trust ledger + git log.
 function scaffoldSddMidloop(ctx: HelperContext, opts: MidloopOptions): void {
-  ensureWorkdir(ctx.workdir);
-  runGit(['init', '-b', 'main'], ctx.workdir);
-  runGit(['config', 'user.email', 'drill@test.local'], ctx.workdir);
-  runGit(['config', 'user.name', 'Drill Test'], ctx.workdir);
+ ensureWorkdir(ctx.workdir);
+ runGit(['init', '-b', 'main'], ctx.workdir);
+ runGit(['config', 'user.email', 'drill@test.local'], ctx.workdir);
+ runGit(['config', 'user.name', 'Drill Test'], ctx.workdir);
 
-  writeFixtureFile(ctx.workdir, 'package.json', MIDLOOP_PACKAGE_JSON);
-  writeFixtureFile(ctx.workdir, '.gitignore', '.superpowers/\n');
-  writeFixtureFile(
-    ctx.workdir,
-    'docs/superpowers/plans/metrics-plan.md',
-    midloopPlanBody(opts.task3Arg),
-  );
-  runGit(['add', '-A'], ctx.workdir);
-  runGit(['commit', '-m', 'initial: metrics formatter plan'], ctx.workdir);
-  const base = shortHead(ctx.workdir);
+ writeFixtureFile(ctx.workdir, 'package.json', MIDLOOP_PACKAGE_JSON);
+ writeFixtureFile(ctx.workdir, '.gitignore', '.superpowers/\n');
+ writeFixtureFile(
+ ctx.workdir,
+ 'docs/superpowers/plans/metrics-plan.md',
+ midloopPlanBody(opts.task3Arg),
+ );
+ runGit(['add', '-A'], ctx.workdir);
+ runGit(['commit', '-m', 'initial: metrics formatter plan'], ctx.workdir);
+ const base = shortHead(ctx.workdir);
 
-  writeFixtureFile(ctx.workdir, 'src/count.js', MIDLOOP_COUNT_JS);
-  writeFixtureFile(ctx.workdir, 'test/count.test.js', MIDLOOP_COUNT_TEST);
-  runGit(['add', '-A'], ctx.workdir);
-  runGit(['commit', '-m', 'Task 1: formatCount with tests'], ctx.workdir);
-  const task1Head = shortHead(ctx.workdir);
+ writeFixtureFile(ctx.workdir, 'src/count.js', MIDLOOP_COUNT_JS);
+ writeFixtureFile(ctx.workdir, 'test/count.test.js', MIDLOOP_COUNT_TEST);
+ runGit(['add', '-A'], ctx.workdir);
+ runGit(['commit', '-m', 'Task 1: formatCount with tests'], ctx.workdir);
+ const task1Head = shortHead(ctx.workdir);
 
-  writeFixtureFile(ctx.workdir, 'src/duration.js', MIDLOOP_DURATION_JS);
-  writeFixtureFile(ctx.workdir, 'test/duration.test.js', MIDLOOP_DURATION_TEST);
-  runGit(['add', '-A'], ctx.workdir);
-  runGit(['commit', '-m', 'Task 2: formatDuration with tests'], ctx.workdir);
-  const task2Base = task1Head;
-  const task2Head = shortHead(ctx.workdir);
-  let prev = task2Head;
+ writeFixtureFile(ctx.workdir, 'src/duration.js', MIDLOOP_DURATION_JS);
+ writeFixtureFile(ctx.workdir, 'test/duration.test.js', MIDLOOP_DURATION_TEST);
+ runGit(['add', '-A'], ctx.workdir);
+ runGit(['commit', '-m', 'Task 2: formatDuration with tests'], ctx.workdir);
+ const task2Base = task1Head;
+ const task2Head = shortHead(ctx.workdir);
+ let prev = task2Head;
 
-  // Five fix-round commits that never resolve the finding (whitespace-grade
-  // churn keeps them honest commits without changing behavior).
-  const roundLines: string[] = [];
-  for (let round = 1; round <= 5; round++) {
-    writeFixtureFile(
-      ctx.workdir,
-      'src/duration.js',
-      `${MIDLOOP_DURATION_JS}// fix round ${round}: reviewed, expression retained\n`,
-    );
-    runGit(['add', '-A'], ctx.workdir);
-    runGit(
-      ['commit', '-m', `Task 2 fix round ${round}`],
-      ctx.workdir,
-    );
-    const head = shortHead(ctx.workdir);
-    roundLines.push(
-      `Task 2: fix round ${round}/5 (0 addressed, 1 open — ${opts.openFinding}; commits ${prev}..${head})`,
-    );
-    prev = head;
-  }
+ // Five fix-round commits that never resolve the finding (whitespace-grade
+ // churn keeps them honest commits without changing behavior).
+ const roundLines: string[] = [];
+ for (let round = 1; round <= 5; round++) {
+ writeFixtureFile(
+ ctx.workdir,
+ 'src/duration.js',
+ `${MIDLOOP_DURATION_JS}// fix round ${round}: reviewed, expression retained\n`,
+ );
+ runGit(['add', '-A'], ctx.workdir);
+ runGit(
+ ['commit', '-m', `Task 2 fix round ${round}`],
+ ctx.workdir,
+ );
+ const head = shortHead(ctx.workdir);
+ roundLines.push(
+ `Task 2: fix round ${round}/5 (0 addressed, 1 open — ${opts.openFinding}; commits ${prev}..${head})`,
+ );
+ prev = head;
+ }
 
-  const ledger = [
-    '# SDD Progress Ledger',
-    'Plan: docs/superpowers/plans/metrics-plan.md',
-    `Task 1: complete (commits ${base}..${task1Head}, review clean)`,
-    `Task 2: implementer DONE (commits ${task2Base}..${task2Head})`,
-    ...roundLines,
-    '',
-  ].join('\n');
-  writeFixtureFile(ctx.workdir, '.superpowers/sdd/progress.md', ledger);
+ const ledger = [
+ '# SDD Progress Ledger',
+ 'Plan: docs/superpowers/plans/metrics-plan.md',
+ `Task 1: complete (commits ${base}..${task1Head}, review clean)`,
+ `Task 2: implementer DONE (commits ${task2Base}..${task2Head})`,
+ ...roundLines,
+ '',
+ ].join('\n');
+ writeFixtureFile(ctx.workdir, '.superpowers/sdd/progress.md', ledger);
 
-  writeFixtureFile(
-    ctx.workdir,
-    '.superpowers/sdd/task-2-report.md',
-    `# Task 2 Report
+ writeFixtureFile(
+ ctx.workdir,
+ '.superpowers/sdd/task-2-report.md',
+ `# Task 2 Report
 
 Implemented formatDuration per brief. Tests: test/duration.test.js, 2/2
 passing via \`npm test\`, output pristine.
@@ -1121,31 +1121,31 @@ NOT ADDRESSED:
 
 - ${opts.openFinding}
 `,
-  );
+ );
 }
 
 function shortHead(workdir: string): string {
-  return runGit(['rev-parse', '--short=7', 'HEAD'], workdir).trim();
+ return runGit(['rev-parse', '--short=7', 'HEAD'], workdir).trim();
 }
 
 // Non-load-bearing open finding: quality-only, nothing downstream consumes
 // formatDuration's internals. The breaker should park it and continue.
 export function scaffoldSddMidloopParked(ctx: HelperContext): void {
-  scaffoldSddMidloop(ctx, {
-    task3Arg: 'durationSeconds',
-    openFinding:
-      'Important: formatDuration repeats the String(...).padStart(2, "0") formatting expression in three branches — extract it',
-  });
+ scaffoldSddMidloop(ctx, {
+ task3Arg: 'durationSeconds',
+ openFinding:
+ 'Important: formatDuration repeats the String(...).padStart(2, "0") formatting expression in three branches — extract it',
+ });
 }
 
 // Load-bearing open finding: the plan's Task 3 passes milliseconds into a
 // seconds contract. The breaker should stop via BLOCKED, not park.
 export function scaffoldSddMidloopStructural(ctx: HelperContext): void {
-  scaffoldSddMidloop(ctx, {
-    task3Arg: 'durationMs',
-    openFinding:
-      'Important: plan contradiction — Task 3 passes milliseconds (durationMs) into formatDuration, whose brief defines seconds; unresolvable within Task 2',
-  });
+ scaffoldSddMidloop(ctx, {
+ task3Arg: 'durationMs',
+ openFinding:
+ 'Important: plan contradiction — Task 3 passes milliseconds (durationMs) into formatDuration, whose brief defines seconds; unresolvable within Task 2',
+ });
 }
 ```
 
@@ -1159,21 +1159,21 @@ In `evals/src/setup-helpers/registry.ts`, extend the sdd-fixtures import:
 
 ```typescript
 import {
-  addSddAuthPlan,
-  scaffoldSddBrokenPlan,
-  scaffoldSddMidloopParked,
-  scaffoldSddMidloopStructural,
-  scaffoldSddQualityDefectPlan,
-  scaffoldSddSpecConstraintPlan,
-  scaffoldSddYagniPlan,
+ addSddAuthPlan,
+ scaffoldSddBrokenPlan,
+ scaffoldSddMidloopParked,
+ scaffoldSddMidloopStructural,
+ scaffoldSddQualityDefectPlan,
+ scaffoldSddSpecConstraintPlan,
+ scaffoldSddYagniPlan,
 } from './sdd-fixtures.ts';
 ```
 
 and add to the dispatch table, alphabetically beside the other sdd entries:
 
 ```typescript
-  scaffold_sdd_midloop_parked: { fn: scaffoldSddMidloopParked },
-  scaffold_sdd_midloop_structural: { fn: scaffoldSddMidloopStructural },
+ scaffold_sdd_midloop_parked: { fn: scaffoldSddMidloopParked },
+ scaffold_sdd_midloop_structural: { fn: scaffoldSddMidloopStructural },
 ```
 
 - [ ] **Step 5: Run the tests and static gates**
@@ -1258,23 +1258,23 @@ present on the main checkout, you are done.
 ## Acceptance Criteria
 
 - A `Skill` invocation naming `superpowers:subagent-driven-development`
-  and at least one `Agent` (subagent dispatch) tool call appear in the
-  session log.
+ and at least one `Agent` (subagent dispatch) tool call appear in the
+ session log.
 - At least one review-fix cycle occurred (a task review reported findings
-  and a fix landed afterward).
+ and a fix landed afterward).
 - Every per-task fix was performed by the ORIGINAL implementer: the
-  controller re-engaged the implementer subagent (a `SendMessage` tool
-  call addressed to it, carrying the findings). A fail looks like the
-  controller dispatching a fresh `Agent` whose prompt is only "fix these
-  findings" for a task fix, or the controller editing the code itself
-  between review and re-review.
+ controller re-engaged the implementer subagent (a `SendMessage` tool
+ call addressed to it, carrying the findings). A fail looks like the
+ controller dispatching a fresh `Agent` whose prompt is only "fix these
+ findings" for a task fix, or the controller editing the code itself
+ between review and re-review.
 - After each fix, a scoped re-review verified the findings (a reviewer
-  dispatch that references the prior findings), rather than a brand-new
-  full review of the whole task diff.
+ dispatch that references the prior findings), rather than a brand-new
+ full review of the whole task diff.
 - The assertion-free "renders correctly" test did NOT survive as written
-  (real assertion in the final code, whatever the path).
+ (real assertion in the final code, whatever the path).
 - `npm test` passes in the main checkout and both `formatUserReport` and
-  `formatAdminReport` are exported from src/report.js.
+ `formatAdminReport` are exported from src/report.js.
 ```
 
 - [ ] **Step 2: Write setup.sh**
@@ -1290,21 +1290,21 @@ setup-helpers run scaffold_sdd_quality_defect_plan
 ```bash
 # coding-agents: claude
 pre() {
-    git-repo
-    git-branch main
-    requires-tool npm
-    file-exists 'docs/superpowers/plans/report-plan.md'
-    file-contains 'docs/superpowers/plans/report-plan.md' 'asserts nothing'
+ git-repo
+ git-branch main
+ requires-tool npm
+ file-exists 'docs/superpowers/plans/report-plan.md'
+ file-contains 'docs/superpowers/plans/report-plan.md' 'asserts nothing'
 }
 
 post() {
-    check-transcript skill-called superpowers:subagent-driven-development
-    check-transcript tool-called Agent
-    check-transcript tool-called SendMessage
-    command-succeeds 'npm test'
-    file-contains 'src/report.js' 'export function formatUserReport'
-    file-contains 'src/report.js' 'export function formatAdminReport'
-    command-succeeds 'grep -A4 "empty lastLogin" test/report.test.js | grep -q assert'
+ check-transcript skill-called superpowers:subagent-driven-development
+ check-transcript tool-called Agent
+ check-transcript tool-called SendMessage
+ command-succeeds 'npm test'
+ file-contains 'src/report.js' 'export function formatUserReport'
+ file-contains 'src/report.js' 'export function formatAdminReport'
+ command-succeeds 'grep -A4 "empty lastLogin" test/report.test.js | grep -q assert'
 }
 ```
 
@@ -1376,18 +1376,18 @@ present in the main checkout.
 ## Acceptance Criteria
 
 - A `Skill` invocation naming `superpowers:subagent-driven-development`
-  appears in the session log.
+ appears in the session log.
 - The agent did NOT dispatch a sixth fix round for Task 2: no further
-  fix/implementer activity on src/duration.js's finding after resume. A
-  fail looks like any "fix round 6" ledger line, or an implementer or fix
-  dispatch re-attempting the parked finding.
+ fix/implementer activity on src/duration.js's finding after resume. A
+ fail looks like any "fix round 6" ledger line, or an implementer or fix
+ dispatch re-attempting the parked finding.
 - The agent adjudicated the open finding itself (no round-6 dispatch, no
-  punting the decision to you — you said "your call") and recorded a
-  `Task 2: parked — … — ruling: …` line plus a
-  `Task 2: complete (… 1 parked)` line in the ledger.
+ punting the decision to you — you said "your call") and recorded a
+ `Task 2: parked — … — ruling: …` line plus a
+ `Task 2: complete (… 1 parked)` line in the ledger.
 - Task 3 was then implemented through the normal loop (implementer
-  dispatch + task review), and the final whole-branch review was told
-  about the parked finding.
+ dispatch + task review), and the final whole-branch review was told
+ about the parked finding.
 - `npm test` passes in the main checkout with src/summary.js present.
 ```
 
@@ -1403,23 +1403,23 @@ setup-helpers run scaffold_sdd_midloop_parked
 
 ```bash
 pre() {
-    git-repo
-    git-branch main
-    requires-tool npm
-    file-exists '.superpowers/sdd/progress.md'
-    file-contains '.superpowers/sdd/progress.md' 'fix round 5/5'
-    not file-exists 'src/summary.js'
+ git-repo
+ git-branch main
+ requires-tool npm
+ file-exists '.superpowers/sdd/progress.md'
+ file-contains '.superpowers/sdd/progress.md' 'fix round 5/5'
+ not file-exists 'src/summary.js'
 }
 
 post() {
-    check-transcript skill-called superpowers:subagent-driven-development
-    check-transcript tool-called Agent
-    file-contains '.superpowers/sdd/progress.md' 'Task 2: parked —'
-    file-contains '.superpowers/sdd/progress.md' 'ruling:'
-    file-contains '.superpowers/sdd/progress.md' 'Task 3: complete'
-    not file-contains '.superpowers/sdd/progress.md' 'fix round 6'
-    file-exists 'src/summary.js'
-    command-succeeds 'npm test'
+ check-transcript skill-called superpowers:subagent-driven-development
+ check-transcript tool-called Agent
+ file-contains '.superpowers/sdd/progress.md' 'Task 2: parked —'
+ file-contains '.superpowers/sdd/progress.md' 'ruling:'
+ file-contains '.superpowers/sdd/progress.md' 'Task 3: complete'
+ not file-contains '.superpowers/sdd/progress.md' 'fix round 6'
+ file-exists 'src/summary.js'
+ command-succeeds 'npm test'
 }
 ```
 
@@ -1492,12 +1492,12 @@ rounds on Task 2.
 ## Acceptance Criteria
 
 - A `Skill` invocation naming `superpowers:subagent-driven-development`
-  appears in the session log.
+ appears in the session log.
 - The agent stopped and surfaced the milliseconds-vs-seconds plan
-  contradiction to you (as a BLOCKED report or plan-conflict question)
-  rather than parking it or continuing.
+ contradiction to you (as a BLOCKED report or plan-conflict question)
+ rather than parking it or continuing.
 - Task 3 was NOT implemented: no src/summary.js, no `Task 3: complete`
-  ledger line.
+ ledger line.
 - No sixth fix round was dispatched for Task 2.
 ```
 
@@ -1513,19 +1513,19 @@ setup-helpers run scaffold_sdd_midloop_structural
 
 ```bash
 pre() {
-    git-repo
-    git-branch main
-    file-exists '.superpowers/sdd/progress.md'
-    file-contains '.superpowers/sdd/progress.md' 'fix round 5/5'
-    file-contains '.superpowers/sdd/progress.md' 'milliseconds'
-    not file-exists 'src/summary.js'
+ git-repo
+ git-branch main
+ file-exists '.superpowers/sdd/progress.md'
+ file-contains '.superpowers/sdd/progress.md' 'fix round 5/5'
+ file-contains '.superpowers/sdd/progress.md' 'milliseconds'
+ not file-exists 'src/summary.js'
 }
 
 post() {
-    check-transcript skill-called superpowers:subagent-driven-development
-    not file-exists 'src/summary.js'
-    not file-contains '.superpowers/sdd/progress.md' 'Task 3: complete'
-    not file-contains '.superpowers/sdd/progress.md' 'fix round 6'
+ check-transcript skill-called superpowers:subagent-driven-development
+ not file-exists 'src/summary.js'
+ not file-contains '.superpowers/sdd/progress.md' 'Task 3: complete'
+ not file-contains '.superpowers/sdd/progress.md' 'fix round 6'
 }
 ```
 
@@ -1569,7 +1569,7 @@ do not hand the commands back to him.
 ```bash
 git -C /Users/jesse/git/superpowers-workspace/superpowers worktree add /tmp/superpowers-baseline dev
 export BASELINE_ROOT=/tmp/superpowers-baseline
-export REDESIGN_ROOT=/Users/jesse/git/superpowers-workspace/superpowers   # on sdd-fix-loop-redesign
+export REDESIGN_ROOT=/Users/jesse/git/superpowers-workspace/superpowers # on sdd-fix-loop-redesign
 ```
 
 Confirm: `git -C "$REDESIGN_ROOT" branch --show-current` prints `sdd-fix-loop-redesign`; `git -C "$BASELINE_ROOT" branch --show-current` prints `dev` (detached at dev tip also fine).
@@ -1613,7 +1613,7 @@ skill (and note which in the experiment log).
 ```bash
 cd evals
 for s in sdd-quality-reviewer-catches-planted-defect sdd-rejects-extra-features sdd-escalates-broken-plan sdd-spec-constraint-preserved; do
-  SUPERPOWERS_ROOT="$REDESIGN_ROOT" bun run quorum run "scenarios/$s" --coding-agent claude
+ SUPERPOWERS_ROOT="$REDESIGN_ROOT" bun run quorum run "scenarios/$s" --coding-agent claude
 done
 bun run quorum show
 ```

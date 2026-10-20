@@ -1,4 +1,4 @@
-# Document Review System Implementation Plan
+﻿# Document Review System Implementation Plan
 
 > **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan.
 
@@ -34,40 +34,40 @@ Use this template when dispatching a spec document reviewer subagent.
 
 ```
 Task tool (general-purpose):
-  description: "Review spec document"
-  prompt: |
-    You are a spec document reviewer. Verify this spec is complete and ready for planning.
+ description: "Review spec document"
+ prompt: |
+ You are a spec document reviewer. Verify this spec is complete and ready for planning.
 
-    **Spec to review:** [SPEC_FILE_PATH]
+ **Spec to review:** [SPEC_FILE_PATH]
 
-    ## What to Check
+ ## What to Check
 
-    | Category | What to Look For |
-    |----------|------------------|
-    | Completeness | TODOs, placeholders, "TBD", incomplete sections |
-    | Coverage | Missing error handling, edge cases, integration points |
-    | Consistency | Internal contradictions, conflicting requirements |
-    | Clarity | Ambiguous requirements |
-    | YAGNI | Unrequested features, over-engineering |
+ | Category | What to Look For |
+ |----------|------------------|
+ | Completeness | TODOs, placeholders, "TBD", incomplete sections |
+ | Coverage | Missing error handling, edge cases, integration points |
+ | Consistency | Internal contradictions, conflicting requirements |
+ | Clarity | Ambiguous requirements |
+ | YAGNI | Unrequested features, over-engineering |
 
-    ## CRITICAL
+ ## CRITICAL
 
-    Look especially hard for:
-    - Any TODO markers or placeholder text
-    - Sections saying "to be defined later" or "will spec when X is done"
-    - Sections noticeably less detailed than others
+ Look especially hard for:
+ - Any TODO markers or placeholder text
+ - Sections saying "to be defined later" or "will spec when X is done"
+ - Sections noticeably less detailed than others
 
-    ## Output Format
+ ## Output Format
 
-    ## Spec Review
+ ## Spec Review
 
-    **Status:** ✅ Approved | ❌ Issues Found
+ **Status:** Approved | Issues Found
 
-    **Issues (if any):**
-    - [Section X]: [specific issue] - [why it matters]
+ **Issues (if any):**
+ - [Section X]: [specific issue] - [why it matters]
 
-    **Recommendations (advisory):**
-    - [suggestions that don't block approval]
+ **Recommendations (advisory):**
+ - [suggestions that don't block approval]
 ```
 
 **Reviewer returns:** Status, Issues (if any), Recommendations
@@ -104,11 +104,11 @@ Find the "After the Design" section and add a new "Spec Review Loop" section aft
 **Spec Review Loop:**
 After writing the spec document:
 1. Dispatch spec-document-reviewer subagent (see spec-document-reviewer-prompt.md)
-2. If ❌ Issues Found:
-   - Fix the issues in the spec document
-   - Re-dispatch reviewer
-   - Repeat until ✅ Approved
-3. If ✅ Approved: proceed to implementation setup
+2. If Issues Found:
+ - Fix the issues in the spec document
+ - Re-dispatch reviewer
+ - Repeat until Approved
+3. If Approved: proceed to implementation setup
 
 **Review loop guidance:**
 - Same agent that wrote the spec fixes it (preserves context)
@@ -152,42 +152,42 @@ Use this template when dispatching a plan document reviewer subagent.
 
 ```
 Task tool (general-purpose):
-  description: "Review plan chunk N"
-  prompt: |
-    You are a plan document reviewer. Verify this plan chunk is complete and ready for implementation.
+ description: "Review plan chunk N"
+ prompt: |
+ You are a plan document reviewer. Verify this plan chunk is complete and ready for implementation.
 
-    **Plan chunk to review:** [PLAN_FILE_PATH] - Chunk N only
-    **Spec for reference:** [SPEC_FILE_PATH]
+ **Plan chunk to review:** [PLAN_FILE_PATH] - Chunk N only
+ **Spec for reference:** [SPEC_FILE_PATH]
 
-    ## What to Check
+ ## What to Check
 
-    | Category | What to Look For |
-    |----------|------------------|
-    | Completeness | TODOs, placeholders, incomplete tasks, missing steps |
-    | Spec Alignment | Chunk covers relevant spec requirements, no scope creep |
-    | Task Decomposition | Tasks atomic, clear boundaries, steps actionable |
-    | Task Syntax | Checkbox syntax (`- [ ]`) on tasks and steps |
-    | Chunk Size | Each chunk under 1000 lines |
+ | Category | What to Look For |
+ |----------|------------------|
+ | Completeness | TODOs, placeholders, incomplete tasks, missing steps |
+ | Spec Alignment | Chunk covers relevant spec requirements, no scope creep |
+ | Task Decomposition | Tasks atomic, clear boundaries, steps actionable |
+ | Task Syntax | Checkbox syntax (`- [ ]`) on tasks and steps |
+ | Chunk Size | Each chunk under 1000 lines |
 
-    ## CRITICAL
+ ## CRITICAL
 
-    Look especially hard for:
-    - Any TODO markers or placeholder text
-    - Steps that say "similar to X" without actual content
-    - Incomplete task definitions
-    - Missing verification steps or expected outputs
+ Look especially hard for:
+ - Any TODO markers or placeholder text
+ - Steps that say "similar to X" without actual content
+ - Incomplete task definitions
+ - Missing verification steps or expected outputs
 
-    ## Output Format
+ ## Output Format
 
-    ## Plan Review - Chunk N
+ ## Plan Review - Chunk N
 
-    **Status:** ✅ Approved | ❌ Issues Found
+ **Status:** Approved | Issues Found
 
-    **Issues (if any):**
-    - [Task X, Step Y]: [specific issue] - [why it matters]
+ **Issues (if any):**
+ - [Task X, Step Y]: [specific issue] - [why it matters]
 
-    **Recommendations (advisory):**
-    - [suggestions that don't block approval]
+ **Recommendations (advisory):**
+ - [suggestions that don't block approval]
 ```
 
 **Reviewer returns:** Status, Issues (if any), Recommendations
@@ -226,12 +226,12 @@ Add before the "Execution Handoff" section:
 After completing each chunk of the plan:
 
 1. Dispatch plan-document-reviewer subagent for the current chunk
-   - Provide: chunk content, path to spec document
-2. If ❌ Issues Found:
-   - Fix the issues in the chunk
-   - Re-dispatch reviewer for that chunk
-   - Repeat until ✅ Approved
-3. If ✅ Approved: proceed to next chunk (or execution handoff if last chunk)
+ - Provide: chunk content, path to spec document
+2. If Issues Found:
+ - Fix the issues in the chunk
+ - Re-dispatch reviewer for that chunk
+ - Repeat until Approved
+3. If Approved: proceed to next chunk (or execution handoff if last chunk)
 
 **Chunk boundaries:** Use `## Chunk N: <name>` headings to delimit chunks. Each chunk should be ≤1000 lines and logically self-contained.
 ```
@@ -244,8 +244,8 @@ Change the Task Structure section to show checkbox syntax:
 ### Task N: [Component Name]
 
 - [ ] **Step 1:** Write the failing test
-  - File: `tests/path/test.py`
-  ...
+ - File: `tests/path/test.py`
+ ...
 ```
 
 - [ ] **Step 4:** Verify the review loop section was added

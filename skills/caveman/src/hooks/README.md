@@ -1,4 +1,4 @@
-# Caveman Hooks
+﻿# Caveman Hooks
 
 These hooks are **bundled with the caveman plugin** and activate automatically when the plugin is installed. No manual setup required.
 
@@ -20,11 +20,11 @@ answers "is caveman on", and so third-party statusline snippets keep working.
 Two things worth knowing about the mirror:
 
 - It **never** contains the literal string `off`. Deactivation deletes it, just
-  as before. `off` is a valid mode name, so an older hook or statusline reading
-  `off` from that path would treat it as an active mode and render
-  `[CAVEMAN:OFF]` or inject "CAVEMAN MODE ACTIVE (off)".
+ as before. `off` is a valid mode name, so an older hook or statusline reading
+ `off` from that path would treat it as an active mode and render
+ `[CAVEMAN:OFF]` or inject "CAVEMAN MODE ACTIVE (off)".
 - With two windows open it shows the other window's mode half the time. Read the
-  per-session file if you need the truth for a specific window.
+ per-session file if you need the truth for a specific window.
 
 Readers accept both spellings of "off": a missing file (the old meaning) and a
 literal `off` in a session file (the new, durable one).
@@ -59,7 +59,7 @@ since it is an explicit user reset.
 - Reads the session JSON Claude Code sends on stdin, takes `session_id`, and renders **that window's** mode; falls back to the legacy mirror when there is no usable id
 - Shows `[CAVEMAN]`, `[CAVEMAN:ULTRA]`, `[CAVEMAN:WENYAN]`, etc. A deactivated session renders nothing at all — never `[CAVEMAN:OFF]`
 - Never blocks: an interactive terminal is not read from, and the stdin read has a 1s ceiling (integer, because macOS ships bash 3.2 and it rejects fractional `read -t`)
-- Appends the lifetime savings suffix `⛏ 12.4k` from `$CLAUDE_CONFIG_DIR/.caveman-statusline-suffix` (written by `caveman-stats.js` on each `/caveman-stats` run; absent until the first run, so fresh installs render no fake number). Opt out with `CAVEMAN_STATUSLINE_SAVINGS=0`.
+- Appends the lifetime savings suffix ` 12.4k` from `$CLAUDE_CONFIG_DIR/.caveman-statusline-suffix` (written by `caveman-stats.js` on each `/caveman-stats` run; absent until the first run, so fresh installs render no fake number). Opt out with `CAVEMAN_STATUSLINE_SAVINGS=0`.
 
 ## Statusline Badge
 
@@ -75,19 +75,19 @@ If you already have a custom statusline, caveman does not overwrite it and Claud
 
 ```json
 {
-  "statusLine": {
-    "type": "command",
-    "command": "bash /path/to/caveman-statusline.sh"
-  }
+ "statusLine": {
+ "type": "command",
+ "command": "bash /path/to/caveman-statusline.sh"
+ }
 }
 ```
 
 ```json
 {
-  "statusLine": {
-    "type": "command",
-    "command": "powershell -ExecutionPolicy Bypass -File C:\\path\\to\\caveman-statusline.ps1"
-  }
+ "statusLine": {
+ "type": "command",
+ "command": "powershell -ExecutionPolicy Bypass -File C:\\path\\to\\caveman-statusline.ps1"
+ }
 }
 ```
 
@@ -103,29 +103,29 @@ re-reading it — stdin can only be drained once.
 caveman_cfg="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 caveman_payload="${caveman_payload:-}"
 if [ -z "$caveman_payload" ] && [ ! -t 0 ]; then
-  IFS= read -r -d '' -t 1 caveman_payload
+ IFS= read -r -d '' -t 1 caveman_payload
 fi
 caveman_sid=$(printf '%s' "$caveman_payload" \
-  | grep -o '"session_id"[[:space:]]*:[[:space:]]*"[^"]*"' \
-  | head -1 | sed -e 's/.*:[[:space:]]*"//' -e 's/"$//')
+ | grep -o '"session_id"[[:space:]]*:[[:space:]]*"[^"]*"' \
+ | head -1 | sed -e 's/.*:[[:space:]]*"//' -e 's/"$//')
 case "$caveman_sid" in ''|*[!A-Za-z0-9_-]*) caveman_sid="" ;; esac
 
 caveman_flag="$caveman_cfg/.caveman-active"
 if [ -n "$caveman_sid" ] && [ -f "$caveman_cfg/.caveman-sessions/$caveman_sid.mode" ]; then
-  caveman_flag="$caveman_cfg/.caveman-sessions/$caveman_sid.mode"
+ caveman_flag="$caveman_cfg/.caveman-sessions/$caveman_sid.mode"
 fi
 
 caveman_text=""
 if [ -f "$caveman_flag" ]; then
-  caveman_mode=$(cat "$caveman_flag" 2>/dev/null)
-  if [ "$caveman_mode" = "off" ]; then
-    caveman_text=""                       # deactivated — render nothing
-  elif [ "$caveman_mode" = "full" ] || [ -z "$caveman_mode" ]; then
-    caveman_text=$'\033[38;5;172m[CAVEMAN]\033[0m'
-  else
-    caveman_suffix=$(echo "$caveman_mode" | tr '[:lower:]' '[:upper:]')
-    caveman_text=$'\033[38;5;172m[CAVEMAN:'"${caveman_suffix}"$']\033[0m'
-  fi
+ caveman_mode=$(cat "$caveman_flag" 2>/dev/null)
+ if [ "$caveman_mode" = "off" ]; then
+ caveman_text="" # deactivated — render nothing
+ elif [ "$caveman_mode" = "full" ] || [ -z "$caveman_mode" ]; then
+ caveman_text=$'\033[38;5;172m[CAVEMAN]\033[0m'
+ else
+ caveman_suffix=$(echo "$caveman_mode" | tr '[:lower:]' '[:upper:]')
+ caveman_text=$'\033[38;5;172m[CAVEMAN:'"${caveman_suffix}"$']\033[0m'
+ fi
 fi
 ```
 
@@ -143,16 +143,16 @@ Badge examples:
 ## How It Works
 
 ```
-SessionStart hook ──┐                                        ┌── UserPromptSubmit hook
-  (session_id,      │                                        │     (session_id, prompt)
-   source)          ▼                                        ▼
-        $CLAUDE_CONFIG_DIR/.caveman-sessions/<session_id>.mode
-                             │             │
-                          mirrors       reads
-                             ▼             ▼
-              .caveman-active      Statusline script  ◀── session JSON on stdin
-           (last-write-wins,        [CAVEMAN:ULTRA]
-            compat only)
+SessionStart hook ──┐ ┌── UserPromptSubmit hook
+ (session_id, │ │ (session_id, prompt)
+ source) ▼ ▼
+ $CLAUDE_CONFIG_DIR/.caveman-sessions/<session_id>.mode
+ │ │
+ mirrors reads
+ ▼ ▼
+ .caveman-active Statusline script ── session JSON on stdin
+ (last-write-wins, [CAVEMAN:ULTRA]
+ compat only)
 ```
 
 SessionStart stdout is injected as hidden system context — Claude sees it, users
@@ -184,11 +184,11 @@ answers "is caveman on", and so third-party statusline snippets keep working.
 Two things worth knowing about the mirror:
 
 - It **never** contains the literal string `off`. Deactivation deletes it, just
-  as before. `off` is a valid mode name, so an older hook or statusline reading
-  `off` from that path would treat it as an active mode and render
-  `[CAVEMAN:OFF]` or inject "CAVEMAN MODE ACTIVE (off)".
+ as before. `off` is a valid mode name, so an older hook or statusline reading
+ `off` from that path would treat it as an active mode and render
+ `[CAVEMAN:OFF]` or inject "CAVEMAN MODE ACTIVE (off)".
 - With two windows open it shows the other window's mode half the time. Read the
-  per-session file if you need the truth for a specific window.
+ per-session file if you need the truth for a specific window.
 
 Readers accept both spellings of "off": a missing file (the old meaning) and a
 literal `off` in a session file (the new, durable one).
@@ -223,7 +223,7 @@ since it is an explicit user reset.
 - Reads the session JSON Claude Code sends on stdin, takes `session_id`, and renders **that window's** mode; falls back to the legacy mirror when there is no usable id
 - Shows `[CAVEMAN]`, `[CAVEMAN:ULTRA]`, `[CAVEMAN:WENYAN]`, etc. A deactivated session renders nothing at all — never `[CAVEMAN:OFF]`
 - Never blocks: an interactive terminal is not read from, and the stdin read has a 1s ceiling (integer, because macOS ships bash 3.2 and it rejects fractional `read -t`)
-- Appends the lifetime savings suffix `⛏ 12.4k` from `$CLAUDE_CONFIG_DIR/.caveman-statusline-suffix` (written by `caveman-stats.js` on each `/caveman-stats` run; absent until the first run, so fresh installs render no fake number). Opt out with `CAVEMAN_STATUSLINE_SAVINGS=0`.
+- Appends the lifetime savings suffix ` 12.4k` from `$CLAUDE_CONFIG_DIR/.caveman-statusline-suffix` (written by `caveman-stats.js` on each `/caveman-stats` run; absent until the first run, so fresh installs render no fake number). Opt out with `CAVEMAN_STATUSLINE_SAVINGS=0`.
 
 ## Statusline Badge
 
@@ -239,19 +239,19 @@ If you already have a custom statusline, caveman does not overwrite it and Claud
 
 ```json
 {
-  "statusLine": {
-    "type": "command",
-    "command": "bash /path/to/caveman-statusline.sh"
-  }
+ "statusLine": {
+ "type": "command",
+ "command": "bash /path/to/caveman-statusline.sh"
+ }
 }
 ```
 
 ```json
 {
-  "statusLine": {
-    "type": "command",
-    "command": "powershell -ExecutionPolicy Bypass -File C:\\path\\to\\caveman-statusline.ps1"
-  }
+ "statusLine": {
+ "type": "command",
+ "command": "powershell -ExecutionPolicy Bypass -File C:\\path\\to\\caveman-statusline.ps1"
+ }
 }
 ```
 
@@ -267,29 +267,29 @@ re-reading it — stdin can only be drained once.
 caveman_cfg="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 caveman_payload="${caveman_payload:-}"
 if [ -z "$caveman_payload" ] && [ ! -t 0 ]; then
-  IFS= read -r -d '' -t 1 caveman_payload
+ IFS= read -r -d '' -t 1 caveman_payload
 fi
 caveman_sid=$(printf '%s' "$caveman_payload" \
-  | grep -o '"session_id"[[:space:]]*:[[:space:]]*"[^"]*"' \
-  | head -1 | sed -e 's/.*:[[:space:]]*"//' -e 's/"$//')
+ | grep -o '"session_id"[[:space:]]*:[[:space:]]*"[^"]*"' \
+ | head -1 | sed -e 's/.*:[[:space:]]*"//' -e 's/"$//')
 case "$caveman_sid" in ''|*[!A-Za-z0-9_-]*) caveman_sid="" ;; esac
 
 caveman_flag="$caveman_cfg/.caveman-active"
 if [ -n "$caveman_sid" ] && [ -f "$caveman_cfg/.caveman-sessions/$caveman_sid.mode" ]; then
-  caveman_flag="$caveman_cfg/.caveman-sessions/$caveman_sid.mode"
+ caveman_flag="$caveman_cfg/.caveman-sessions/$caveman_sid.mode"
 fi
 
 caveman_text=""
 if [ -f "$caveman_flag" ]; then
-  caveman_mode=$(cat "$caveman_flag" 2>/dev/null)
-  if [ "$caveman_mode" = "off" ]; then
-    caveman_text=""                       # deactivated — render nothing
-  elif [ "$caveman_mode" = "full" ] || [ -z "$caveman_mode" ]; then
-    caveman_text=$'\033[38;5;172m[CAVEMAN]\033[0m'
-  else
-    caveman_suffix=$(echo "$caveman_mode" | tr '[:lower:]' '[:upper:]')
-    caveman_text=$'\033[38;5;172m[CAVEMAN:'"${caveman_suffix}"$']\033[0m'
-  fi
+ caveman_mode=$(cat "$caveman_flag" 2>/dev/null)
+ if [ "$caveman_mode" = "off" ]; then
+ caveman_text="" # deactivated — render nothing
+ elif [ "$caveman_mode" = "full" ] || [ -z "$caveman_mode" ]; then
+ caveman_text=$'\033[38;5;172m[CAVEMAN]\033[0m'
+ else
+ caveman_suffix=$(echo "$caveman_mode" | tr '[:lower:]' '[:upper:]')
+ caveman_text=$'\033[38;5;172m[CAVEMAN:'"${caveman_suffix}"$']\033[0m'
+ fi
 fi
 ```
 

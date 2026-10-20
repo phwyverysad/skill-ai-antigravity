@@ -1,4 +1,4 @@
-# OpenCode Support Implementation Plan
+﻿# OpenCode Support Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
@@ -38,45 +38,45 @@ const path = require('path');
  * @returns {{name: string, description: string}}
  */
 function extractFrontmatter(filePath) {
-    try {
-        const content = fs.readFileSync(filePath, 'utf8');
-        const lines = content.split('\n');
+ try {
+ const content = fs.readFileSync(filePath, 'utf8');
+ const lines = content.split('\n');
 
-        let inFrontmatter = false;
-        let name = '';
-        let description = '';
+ let inFrontmatter = false;
+ let name = '';
+ let description = '';
 
-        for (const line of lines) {
-            if (line.trim() === '---') {
-                if (inFrontmatter) break;
-                inFrontmatter = true;
-                continue;
-            }
+ for (const line of lines) {
+ if (line.trim() === '---') {
+ if (inFrontmatter) break;
+ inFrontmatter = true;
+ continue;
+ }
 
-            if (inFrontmatter) {
-                const match = line.match(/^(\w+):\s*(.*)$/);
-                if (match) {
-                    const [, key, value] = match;
-                    switch (key) {
-                        case 'name':
-                            name = value.trim();
-                            break;
-                        case 'description':
-                            description = value.trim();
-                            break;
-                    }
-                }
-            }
-        }
+ if (inFrontmatter) {
+ const match = line.match(/^(\w+):\s*(.*)$/);
+ if (match) {
+ const [, key, value] = match;
+ switch (key) {
+ case 'name':
+ name = value.trim();
+ break;
+ case 'description':
+ description = value.trim();
+ break;
+ }
+ }
+ }
+ }
 
-        return { name, description };
-    } catch (error) {
-        return { name: '', description: '' };
-    }
+ return { name, description };
+ } catch (error) {
+ return { name: '', description: '' };
+ }
 }
 
 module.exports = {
-    extractFrontmatter
+ extractFrontmatter
 };
 ```
 
@@ -114,40 +114,40 @@ Add before `module.exports`:
  * @returns {Array<{path: string, name: string, description: string, sourceType: string}>}
  */
 function findSkillsInDir(dir, sourceType, maxDepth = 3) {
-    const skills = [];
+ const skills = [];
 
-    if (!fs.existsSync(dir)) return skills;
+ if (!fs.existsSync(dir)) return skills;
 
-    function recurse(currentDir, depth) {
-        if (depth > maxDepth) return;
+ function recurse(currentDir, depth) {
+ if (depth > maxDepth) return;
 
-        const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+ const entries = fs.readdirSync(currentDir, { withFileTypes: true });
 
-        for (const entry of entries) {
-            const fullPath = path.join(currentDir, entry.name);
+ for (const entry of entries) {
+ const fullPath = path.join(currentDir, entry.name);
 
-            if (entry.isDirectory()) {
-                // Check for SKILL.md in this directory
-                const skillFile = path.join(fullPath, 'SKILL.md');
-                if (fs.existsSync(skillFile)) {
-                    const { name, description } = extractFrontmatter(skillFile);
-                    skills.push({
-                        path: fullPath,
-                        skillFile: skillFile,
-                        name: name || entry.name,
-                        description: description || '',
-                        sourceType: sourceType
-                    });
-                }
+ if (entry.isDirectory()) {
+ // Check for SKILL.md in this directory
+ const skillFile = path.join(fullPath, 'SKILL.md');
+ if (fs.existsSync(skillFile)) {
+ const { name, description } = extractFrontmatter(skillFile);
+ skills.push({
+ path: fullPath,
+ skillFile: skillFile,
+ name: name || entry.name,
+ description: description || '',
+ sourceType: sourceType
+ });
+ }
 
-                // Recurse into subdirectories
-                recurse(fullPath, depth + 1);
-            }
-        }
-    }
+ // Recurse into subdirectories
+ recurse(fullPath, depth + 1);
+ }
+ }
+ }
 
-    recurse(dir, 0);
-    return skills;
+ recurse(dir, 0);
+ return skills;
 }
 ```
 
@@ -157,8 +157,8 @@ Replace the exports line with:
 
 ```javascript
 module.exports = {
-    extractFrontmatter,
-    findSkillsInDir
+ extractFrontmatter,
+ findSkillsInDir
 };
 ```
 
@@ -197,37 +197,37 @@ Add before `module.exports`:
  * @returns {{skillFile: string, sourceType: string, skillPath: string} | null}
  */
 function resolveSkillPath(skillName, superpowersDir, personalDir) {
-    // Strip superpowers: prefix if present
-    const forceSuperpowers = skillName.startsWith('superpowers:');
-    const actualSkillName = forceSuperpowers ? skillName.replace(/^superpowers:/, '') : skillName;
+ // Strip superpowers: prefix if present
+ const forceSuperpowers = skillName.startsWith('superpowers:');
+ const actualSkillName = forceSuperpowers ? skillName.replace(/^superpowers:/, '') : skillName;
 
-    // Try personal skills first (unless explicitly superpowers:)
-    if (!forceSuperpowers && personalDir) {
-        const personalPath = path.join(personalDir, actualSkillName);
-        const personalSkillFile = path.join(personalPath, 'SKILL.md');
-        if (fs.existsSync(personalSkillFile)) {
-            return {
-                skillFile: personalSkillFile,
-                sourceType: 'personal',
-                skillPath: actualSkillName
-            };
-        }
-    }
+ // Try personal skills first (unless explicitly superpowers:)
+ if (!forceSuperpowers && personalDir) {
+ const personalPath = path.join(personalDir, actualSkillName);
+ const personalSkillFile = path.join(personalPath, 'SKILL.md');
+ if (fs.existsSync(personalSkillFile)) {
+ return {
+ skillFile: personalSkillFile,
+ sourceType: 'personal',
+ skillPath: actualSkillName
+ };
+ }
+ }
 
-    // Try superpowers skills
-    if (superpowersDir) {
-        const superpowersPath = path.join(superpowersDir, actualSkillName);
-        const superpowersSkillFile = path.join(superpowersPath, 'SKILL.md');
-        if (fs.existsSync(superpowersSkillFile)) {
-            return {
-                skillFile: superpowersSkillFile,
-                sourceType: 'superpowers',
-                skillPath: actualSkillName
-            };
-        }
-    }
+ // Try superpowers skills
+ if (superpowersDir) {
+ const superpowersPath = path.join(superpowersDir, actualSkillName);
+ const superpowersSkillFile = path.join(superpowersPath, 'SKILL.md');
+ if (fs.existsSync(superpowersSkillFile)) {
+ return {
+ skillFile: superpowersSkillFile,
+ sourceType: 'superpowers',
+ skillPath: actualSkillName
+ };
+ }
+ }
 
-    return null;
+ return null;
 }
 ```
 
@@ -235,9 +235,9 @@ function resolveSkillPath(skillName, superpowersDir, personalDir) {
 
 ```javascript
 module.exports = {
-    extractFrontmatter,
-    findSkillsInDir,
-    resolveSkillPath
+ extractFrontmatter,
+ findSkillsInDir,
+ resolveSkillPath
 };
 ```
 
@@ -279,27 +279,27 @@ Add before `module.exports`:
  * @returns {boolean} - True if updates are available
  */
 function checkForUpdates(repoDir) {
-    try {
-        // Quick check with 3 second timeout to avoid delays if network is down
-        const output = execSync('git fetch origin && git status --porcelain=v1 --branch', {
-            cwd: repoDir,
-            timeout: 3000,
-            encoding: 'utf8',
-            stdio: 'pipe'
-        });
+ try {
+ // Quick check with 3 second timeout to avoid delays if network is down
+ const output = execSync('git fetch origin && git status --porcelain=v1 --branch', {
+ cwd: repoDir,
+ timeout: 3000,
+ encoding: 'utf8',
+ stdio: 'pipe'
+ });
 
-        // Parse git status output to see if we're behind
-        const statusLines = output.split('\n');
-        for (const line of statusLines) {
-            if (line.startsWith('## ') && line.includes('[behind ')) {
-                return true; // We're behind remote
-            }
-        }
-        return false; // Up to date
-    } catch (error) {
-        // Network down, git error, timeout, etc. - don't block bootstrap
-        return false;
-    }
+ // Parse git status output to see if we're behind
+ const statusLines = output.split('\n');
+ for (const line of statusLines) {
+ if (line.startsWith('## ') && line.includes('[behind ')) {
+ return true; // We're behind remote
+ }
+ }
+ return false; // Up to date
+ } catch (error) {
+ // Network down, git error, timeout, etc. - don't block bootstrap
+ return false;
+ }
 }
 ```
 
@@ -307,10 +307,10 @@ function checkForUpdates(repoDir) {
 
 ```javascript
 module.exports = {
-    extractFrontmatter,
-    findSkillsInDir,
-    resolveSkillPath,
-    checkForUpdates
+ extractFrontmatter,
+ findSkillsInDir,
+ resolveSkillPath,
+ checkForUpdates
 };
 ```
 
@@ -476,9 +476,9 @@ const personalSkillsDir = path.join(homeDir, '.config/opencode/skills');
  * OpenCode plugin entry point
  */
 export const SuperpowersPlugin = async ({ project, client, $, directory, worktree }) => {
-  return {
-    // Custom tools and hooks will go here
-  };
+ return {
+ // Custom tools and hooks will go here
+ };
 };
 ```
 
@@ -507,68 +507,68 @@ Replace the plugin return statement with:
 
 ```javascript
 export const SuperpowersPlugin = async ({ project, client, $, directory, worktree }) => {
-  // Import zod for schema validation
-  const { z } = await import('zod');
+ // Import zod for schema validation
+ const { z } = await import('zod');
 
-  return {
-    tools: [
-      {
-        name: 'use_skill',
-        description: 'Load and read a specific skill to guide your work. Skills contain proven workflows, mandatory processes, and expert techniques.',
-        schema: z.object({
-          skill_name: z.string().describe('Name of the skill to load (e.g., "superpowers:brainstorming" or "my-custom-skill")')
-        }),
-        execute: async ({ skill_name }) => {
-          // Resolve skill path (handles shadowing: personal > superpowers)
-          const resolved = skillsCore.resolveSkillPath(
-            skill_name,
-            superpowersSkillsDir,
-            personalSkillsDir
-          );
+ return {
+ tools: [
+ {
+ name: 'use_skill',
+ description: 'Load and read a specific skill to guide your work. Skills contain proven workflows, mandatory processes, and expert techniques.',
+ schema: z.object({
+ skill_name: z.string().describe('Name of the skill to load (e.g., "superpowers:brainstorming" or "my-custom-skill")')
+ }),
+ execute: async ({ skill_name }) => {
+ // Resolve skill path (handles shadowing: personal > superpowers)
+ const resolved = skillsCore.resolveSkillPath(
+ skill_name,
+ superpowersSkillsDir,
+ personalSkillsDir
+ );
 
-          if (!resolved) {
-            return `Error: Skill "${skill_name}" not found.\n\nRun find_skills to see available skills.`;
-          }
+ if (!resolved) {
+ return `Error: Skill "${skill_name}" not found.\n\nRun find_skills to see available skills.`;
+ }
 
-          // Read skill content
-          const fullContent = fs.readFileSync(resolved.skillFile, 'utf8');
-          const { name, description } = skillsCore.extractFrontmatter(resolved.skillFile);
+ // Read skill content
+ const fullContent = fs.readFileSync(resolved.skillFile, 'utf8');
+ const { name, description } = skillsCore.extractFrontmatter(resolved.skillFile);
 
-          // Extract content after frontmatter
-          const lines = fullContent.split('\n');
-          let inFrontmatter = false;
-          let frontmatterEnded = false;
-          const contentLines = [];
+ // Extract content after frontmatter
+ const lines = fullContent.split('\n');
+ let inFrontmatter = false;
+ let frontmatterEnded = false;
+ const contentLines = [];
 
-          for (const line of lines) {
-            if (line.trim() === '---') {
-              if (inFrontmatter) {
-                frontmatterEnded = true;
-                continue;
-              }
-              inFrontmatter = true;
-              continue;
-            }
+ for (const line of lines) {
+ if (line.trim() === '---') {
+ if (inFrontmatter) {
+ frontmatterEnded = true;
+ continue;
+ }
+ inFrontmatter = true;
+ continue;
+ }
 
-            if (frontmatterEnded || !inFrontmatter) {
-              contentLines.push(line);
-            }
-          }
+ if (frontmatterEnded || !inFrontmatter) {
+ contentLines.push(line);
+ }
+ }
 
-          const content = contentLines.join('\n').trim();
-          const skillDirectory = path.dirname(resolved.skillFile);
+ const content = contentLines.join('\n').trim();
+ const skillDirectory = path.dirname(resolved.skillFile);
 
-          // Format output similar to Claude Code's Skill tool
-          return `# ${name || skill_name}
+ // Format output similar to Claude Code's Skill tool
+ return `# ${name || skill_name}
 # ${description || ''}
 # Supporting tools and docs are in ${skillDirectory}
 # ============================================
 
 ${content}`;
-        }
-      }
-    ]
-  };
+ }
+ }
+ ]
+ };
 };
 ```
 
@@ -596,46 +596,46 @@ git commit -m "feat: implement use_skill tool for opencode"
 Add after the use_skill tool definition, before closing the tools array:
 
 ```javascript
-      {
-        name: 'find_skills',
-        description: 'List all available skills in the superpowers and personal skill libraries.',
-        schema: z.object({}),
-        execute: async () => {
-          // Find skills in both directories
-          const superpowersSkills = skillsCore.findSkillsInDir(
-            superpowersSkillsDir,
-            'superpowers',
-            3
-          );
-          const personalSkills = skillsCore.findSkillsInDir(
-            personalSkillsDir,
-            'personal',
-            3
-          );
+ {
+ name: 'find_skills',
+ description: 'List all available skills in the superpowers and personal skill libraries.',
+ schema: z.object({}),
+ execute: async () => {
+ // Find skills in both directories
+ const superpowersSkills = skillsCore.findSkillsInDir(
+ superpowersSkillsDir,
+ 'superpowers',
+ 3
+ );
+ const personalSkills = skillsCore.findSkillsInDir(
+ personalSkillsDir,
+ 'personal',
+ 3
+ );
 
-          // Combine and format skills list
-          const allSkills = [...personalSkills, ...superpowersSkills];
+ // Combine and format skills list
+ const allSkills = [...personalSkills, ...superpowersSkills];
 
-          if (allSkills.length === 0) {
-            return 'No skills found. Install superpowers skills to ~/.config/opencode/superpowers/skills/';
-          }
+ if (allSkills.length === 0) {
+ return 'No skills found. Install superpowers skills to ~/.config/opencode/superpowers/skills/';
+ }
 
-          let output = 'Available skills:\n\n';
+ let output = 'Available skills:\n\n';
 
-          for (const skill of allSkills) {
-            const namespace = skill.sourceType === 'personal' ? '' : 'superpowers:';
-            const skillName = skill.name || path.basename(skill.path);
+ for (const skill of allSkills) {
+ const namespace = skill.sourceType === 'personal' ? '' : 'superpowers:';
+ const skillName = skill.name || path.basename(skill.path);
 
-            output += `${namespace}${skillName}\n`;
-            if (skill.description) {
-              output += `  ${skill.description}\n`;
-            }
-            output += `  Directory: ${skill.path}\n\n`;
-          }
+ output += `${namespace}${skillName}\n`;
+ if (skill.description) {
+ output += ` ${skill.description}\n`;
+ }
+ output += ` Directory: ${skill.path}\n\n`;
+ }
 
-          return output;
-        }
-      }
+ return output;
+ }
+ }
 ```
 
 **Step 2: Verify syntax**
@@ -662,43 +662,43 @@ git commit -m "feat: implement find_skills tool for opencode"
 After the tools array, add:
 
 ```javascript
-    'session.started': async () => {
-      // Read using-superpowers skill content
-      const usingSuperpowersPath = skillsCore.resolveSkillPath(
-        'using-superpowers',
-        superpowersSkillsDir,
-        personalSkillsDir
-      );
+ 'session.started': async () => {
+ // Read using-superpowers skill content
+ const usingSuperpowersPath = skillsCore.resolveSkillPath(
+ 'using-superpowers',
+ superpowersSkillsDir,
+ personalSkillsDir
+ );
 
-      let usingSuperpowersContent = '';
-      if (usingSuperpowersPath) {
-        const fullContent = fs.readFileSync(usingSuperpowersPath.skillFile, 'utf8');
-        // Strip frontmatter
-        const lines = fullContent.split('\n');
-        let inFrontmatter = false;
-        let frontmatterEnded = false;
-        const contentLines = [];
+ let usingSuperpowersContent = '';
+ if (usingSuperpowersPath) {
+ const fullContent = fs.readFileSync(usingSuperpowersPath.skillFile, 'utf8');
+ // Strip frontmatter
+ const lines = fullContent.split('\n');
+ let inFrontmatter = false;
+ let frontmatterEnded = false;
+ const contentLines = [];
 
-        for (const line of lines) {
-          if (line.trim() === '---') {
-            if (inFrontmatter) {
-              frontmatterEnded = true;
-              continue;
-            }
-            inFrontmatter = true;
-            continue;
-          }
+ for (const line of lines) {
+ if (line.trim() === '---') {
+ if (inFrontmatter) {
+ frontmatterEnded = true;
+ continue;
+ }
+ inFrontmatter = true;
+ continue;
+ }
 
-          if (frontmatterEnded || !inFrontmatter) {
-            contentLines.push(line);
-          }
-        }
+ if (frontmatterEnded || !inFrontmatter) {
+ contentLines.push(line);
+ }
+ }
 
-        usingSuperpowersContent = contentLines.join('\n').trim();
-      }
+ usingSuperpowersContent = contentLines.join('\n').trim();
+ }
 
-      // Tool mapping instructions
-      const toolMapping = `
+ // Tool mapping instructions
+ const toolMapping = `
 **Tool Mapping for OpenCode:**
 When skills reference tools you don't have, substitute OpenCode equivalents:
 - \`TodoWrite\` → \`update_plan\` (your planning/task tracking tool)
@@ -717,18 +717,18 @@ When skills reference tools you don't have, substitute OpenCode equivalents:
 - Personal skills override superpowers skills when names match
 `;
 
-      // Check for updates (non-blocking)
-      const hasUpdates = skillsCore.checkForUpdates(
-        path.join(homeDir, '.config/opencode/superpowers')
-      );
+ // Check for updates (non-blocking)
+ const hasUpdates = skillsCore.checkForUpdates(
+ path.join(homeDir, '.config/opencode/superpowers')
+ );
 
-      const updateNotice = hasUpdates ?
-        '\n\n⚠️ **Updates available!** Run `cd ~/.config/opencode/superpowers && git pull` to update superpowers.' :
-        '';
+ const updateNotice = hasUpdates ?
+ '\n\n️ **Updates available!** Run `cd ~/.config/opencode/superpowers && git pull` to update superpowers.' :
+ '';
 
-      // Return context to inject into session
-      return {
-        context: `<EXTREMELY_IMPORTANT>
+ // Return context to inject into session
+ return {
+ context: `<EXTREMELY_IMPORTANT>
 You have superpowers.
 
 **Below is the full content of your 'superpowers:using-superpowers' skill - your introduction to using skills. For all other skills, use the 'use_skill' tool:**
@@ -737,8 +737,8 @@ ${usingSuperpowersContent}
 
 ${toolMapping}${updateNotice}
 </EXTREMELY_IMPORTANT>`
-      };
-    }
+ };
+ }
 ```
 
 **Step 2: Verify syntax**
@@ -948,16 +948,16 @@ At the top of the file (after the header), add:
 ### Added
 
 - **OpenCode Support**: Native JavaScript plugin for OpenCode.ai
-  - Custom tools: `use_skill` and `find_skills`
-  - Automatic session bootstrap with tool mapping instructions
-  - Shared core module (`lib/skills-core.js`) for code reuse
-  - Installation guide in `.opencode/INSTALL.md`
+ - Custom tools: `use_skill` and `find_skills`
+ - Automatic session bootstrap with tool mapping instructions
+ - Shared core module (`lib/skills-core.js`) for code reuse
+ - Installation guide in `.opencode/INSTALL.md`
 
 ### Changed
 
 - **Refactored Codex Implementation**: Now uses shared `lib/skills-core.js` module
-  - Eliminates code duplication between Codex and OpenCode
-  - Single source of truth for skill discovery and parsing
+ - Eliminates code duplication between Codex and OpenCode
+ - Single source of truth for skill discovery and parsing
 
 ---
 
@@ -1029,7 +1029,7 @@ Expected:
 .opencode/
 ├── INSTALL.md
 └── plugin/
-    └── superpowers.js
+ └── superpowers.js
 ```
 
 **Step 3: If structure correct, proceed**

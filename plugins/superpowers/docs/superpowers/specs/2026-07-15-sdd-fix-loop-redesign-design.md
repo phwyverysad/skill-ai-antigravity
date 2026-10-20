@@ -1,4 +1,4 @@
-# SDD Fix-Loop Redesign — Design Spec
+﻿# SDD Fix-Loop Redesign — Design Spec
 
 **Status:** Approved design (brainstormed with Jesse 2026-07-15); implementation
 plan to follow.
@@ -13,24 +13,24 @@ reworded. New machinery ships with drill evidence.
 Four, all observed in real sessions:
 
 1. **Pathological review loops.** The loop is literally "Repeat until
-   approved" — no round cap. Each re-review is a fresh full review of the
-   whole diff, so a nondeterministic frontier reviewer surfaces new findings
-   every round instead of verifying fixes. Result: implement, review, fix,
-   review, review, fix, review, fix — with no circuit breaker. The
-   strict-cost spec (2026-06-10) independently measured review-loop count as
-   the biggest run-to-run cost variance.
+ approved" — no round cap. Each re-review is a fresh full review of the
+ whole diff, so a nondeterministic frontier reviewer surfaces new findings
+ every round instead of verifying fixes. Result: implement, review, fix,
+ review, review, fix, review, fix — with no circuit breaker. The
+ strict-cost spec (2026-06-10) independently measured review-loop count as
+ the biggest run-to-run cost variance.
 2. **Contradictory fix policy.** The process diagram and "Constructing
-   Reviewer Prompts" dispatch dedicated fix subagents; Red Flags says
-   "Implementer (same subagent) fixes them"; implementer-prompt.md's "After
-   Review Findings" section assumes the implementer will be re-engaged. Three
-   answers to "who fixes?" in one skill.
+ Reviewer Prompts" dispatch dedicated fix subagents; Red Flags says
+ "Implementer (same subagent) fixes them"; implementer-prompt.md's "After
+ Review Findings" section assumes the implementer will be re-engaged. Three
+ answers to "who fixes?" in one skill.
 3. **Accreted structure.** Thirteen top-level sections; guidance for one
-   activity is scattered across four of them. "Constructing Reviewer Prompts"
-   is a grab-bag holding reviewer guidance, fix policy, final-review policy,
-   and plan-conflict adjudication.
+ activity is scattered across four of them. "Constructing Reviewer Prompts"
+ is a grab-bag holding reviewer guidance, fix policy, final-review policy,
+ and plan-conflict adjudication.
 4. **Red Flags format.** Seven sibling skills use the `| Excuse | Reality |`
-   rationalization table; SDD carries a 17-bullet "Never" list plus three
-   "If X" mini-blocks.
+ rationalization table; SDD carries a 17-bullet "Never" list plus three
+ "If X" mini-blocks.
 
 ## Design Decisions
 
@@ -45,7 +45,7 @@ Four, all observed in real sessions:
 
 ## The Fix Loop
 
-Trigger: a task review returns spec ❌ or any Critical/Important finding.
+Trigger: a task review returns spec or any Critical/Important finding.
 
 **Rounds 1–3 — resume the original implementer.** Send the findings verbatim
 (Critical/Important plus spec gaps). The implementer fixes, re-runs the
@@ -85,14 +85,14 @@ After round five fails, the controller stops dispatching and judges each open
 finding against the brief, the plan, and cross-task context:
 
 - **Contested or wrong** → ledger with a one-line adjudication ("controller:
-  reviewer wrong because X"), continue. The final review sees both sides.
+ reviewer wrong because X"), continue. The final review sees both sides.
 - **Real, not load-bearing** → ledger as known-open, continue. Later
-  dispatches touching that area carry a pointer to the entry.
+ dispatches touching that area carry a pointer to the entry.
 - **Real and load-bearing** (later tasks build on it, or it reveals a plan
-  defect) → the existing BLOCKED stop. Park-and-continue defers a structural
-  failure to the most expensive point and lets dependents build on it, so
-  structural failures stop the run — through the stop condition that already
-  exists, not a new checkpoint.
+ defect) → the existing BLOCKED stop. Park-and-continue defers a structural
+ failure to the most expensive point and lets dependents build on it, so
+ structural failures stop the run — through the stop condition that already
+ exists, not a new checkpoint.
 
 Every adjudication is a ledger entry. Silent discards stay forbidden.
 
@@ -105,21 +105,21 @@ New skeleton, in execution order:
 3. The Process — diagram updated for the new loop
 4. Setup — worktree, ledger check/resume, pre-flight plan review, todos
 5. Model Selection — stays one cross-cutting section; every dispatch
-   consults it, so folding it into points of use would repeat it five times
+ consults it, so folding it into points of use would repeat it five times
 6. The Task Loop — five numbered steps:
-   1. Dispatch the implementer (task-brief script, five-part dispatch
-      composition, model line required)
-   2. Handle the report (DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED)
-   3. Review the task (review-package script, reviewer dispatch composition,
-      constraints lens, no pre-judging, ⚠️ handling)
-   4. Fix loop (the machinery above)
-   5. Complete the task (ledger append, todo update)
+ 1. Dispatch the implementer (task-brief script, five-part dispatch
+ composition, model line required)
+ 2. Handle the report (DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED)
+ 3. Review the task (review-package script, reviewer dispatch composition,
+ constraints lens, no pre-judging, ️ handling)
+ 4. Fix loop (the machinery above)
+ 5. Complete the task (ledger append, todo update)
 7. Final Review — package, model pin, one fix wave, one scoped re-review,
-   adjudication
+ adjudication
 8. Finish — finishing-a-development-branch
 9. Common Rationalizations — the table
 10. Example Workflow — updated to show a resume-based fix round and the
-    breaker not tripping
+ breaker not tripping
 
 "Constructing Reviewer Prompts," "File Handoffs," and "Durable Progress"
 dissolve into the steps where each rule applies. Every eval-tuned sentence
@@ -148,19 +148,19 @@ ledger-complete tasks) move to their points of use.
 ## Prompt Templates
 
 - **implementer-prompt.md** — "After Review Findings" rewritten for resume
-  semantics: you will be resumed with findings; fix, re-run covering tests,
-  append to your report file, return the short contract.
+ semantics: you will be resumed with findings; fix, re-run covering tests,
+ append to your report file, return the short contract.
 - **task-reviewer-prompt.md** — initial review only; the trailing re-review
-  sentence moves out.
+ sentence moves out.
 - **re-review-prompt.md (new)** — the scoped re-review contract: inputs are
-  brief, updated report, original findings, fix-scoped diff package; output
-  is a per-finding verdict (addressed / not addressed), new breakage in the
-  fix diff, and non-blocking observations outside it. A separate template
-  because it is a different contract — overloading the full-review template
-  produced the current ambiguity.
+ brief, updated report, original findings, fix-scoped diff package; output
+ is a per-finding verdict (addressed / not addressed), new breakage in the
+ fix diff, and non-blocking observations outside it. A separate template
+ because it is a different contract — overloading the full-review template
+ produced the current ambiguity.
 - **Takeover dispatch (rounds 4–5)** — composed from implementer-prompt.md
-  plus SKILL.md guidance (brief, report path, open findings, takeover
-  framing); no new template file.
+ plus SKILL.md guidance (brief, report path, open findings, takeover
+ framing); no new template file.
 
 ## Final Review Loop
 
@@ -175,13 +175,13 @@ branch gets a bounded loop too.
 Three new drill scenarios in `evals/`:
 
 1. **Resume, don't re-dispatch:** a task review returns findings; the
-   controller must resume the same implementer rather than dispatch a fix
-   subagent.
+ controller must resume the same implementer rather than dispatch a fix
+ subagent.
 2. **Breaker trips:** a seeded never-satisfied reviewer; the controller must
-   stop dispatching after the fifth round fails, adjudicate, ledger, and
-   continue — not loop.
+ stop dispatching after the fifth round fails, adjudicate, ledger, and
+ continue — not loop.
 3. **Structural finding stops:** a load-bearing finding (later tasks depend
-   on it); the controller must stop via BLOCKED rather than park.
+ on it); the controller must stop via BLOCKED rather than park.
 
 Plus before/after runs of the existing SDD scenarios to catch regressions
 from the reorganization.
@@ -189,8 +189,8 @@ from the reorganization.
 ## Non-Goals
 
 - Ledger session-scoping — PR #1943 owns it. This work touches the same
-  sections, so the implementation plan notes the collision risk.
+ sections, so the implementation plan notes the collision risk.
 - Script changes — task-brief and review-package already do what the new
-  loop needs.
+ loop needs.
 - Changes to executing-plans or requesting-code-review beyond the final-
-  review pointer continuing to resolve.
+ review pointer continuing to resolve.

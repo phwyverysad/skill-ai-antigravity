@@ -1,4 +1,4 @@
-# Caveman 2 is here. The skill is untouched and still MIT.
+﻿# Caveman 2 is here. The skill is untouched and still MIT.
 
 Let me say the most important thing first, before anything else.
 
@@ -14,7 +14,7 @@ Caveman v1 shrank the model's **mouth**. It made the model *talk* shorter throug
 
 Caveman 2 adds the **ears**. It shrinks what the model *reads*.
 
-> Caveman make mouth smaller. Now Caveman make ears smaller too. 🪨
+> Caveman make mouth smaller. Now Caveman make ears smaller too. 
 
 Most of your token bill isn't the model talking. It's the model listening — tool outputs, logs, build dumps, giant JSON blobs, search results, code you paste in for context. All of that hits the model at full size, and you pay for every token of it.
 
@@ -24,7 +24,7 @@ Here's a real run:
 
 ```text
 $ caveman compress < orders.json
-16,098 tokens  →  1,091 tokens     93% smaller  ·  byte-safe  ·  fully recoverable
+16,098 tokens → 1,091 tokens 93% smaller · byte-safe · fully recoverable
 ```
 
 That's a 40-record JSON blob going from 16,098 tokens to 1,091. The savings here are **inferred** — this is what you *could* save, measured on your own machine, not a number we projected or a number we claim is verified. (More on that word below; it matters.) And nothing is destroyed. The model can pull the full payload back on demand through CCR if it actually needs the detail. Byte-safe by default: on any parse hiccup, your bytes pass through untouched.
@@ -89,7 +89,7 @@ Look for the `good first issue` label. New compressors are the most fun and the 
 
 Thanks for using the skill. v2 exists to earn the same trust at engine scale.
 
-🪨 few token. big save. no lie.
+ few token. big save. no lie.
 
 ---
 

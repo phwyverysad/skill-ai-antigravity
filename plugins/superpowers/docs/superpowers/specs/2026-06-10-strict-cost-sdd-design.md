@@ -1,4 +1,4 @@
-# Strict-Cost SDD — Design Spec
+﻿# Strict-Cost SDD — Design Spec
 
 **Status:** Proposed experiment ladder (not implementation). Each rung ships
 only with its gate evidence; abort any rung whose gates fail.
@@ -31,12 +31,12 @@ stays at the highest tier or with the human. The judgment points in SDD,
 explicitly:
 
 - **BLOCKED / NEEDS_CONTEXT handling** — diagnosing why a subagent is stuck
-  and choosing the remedy
-- **⚠️ "cannot verify from diff" resolution** — the controller adjudicating
-  with cross-task context
+ and choosing the remedy
+- **️ "cannot verify from diff" resolution** — the controller adjudicating
+ with cross-task context
 - **Dispatch curation** — ambiguity resolution and task-boundary drawing
-  (measured load-bearing: the Task 5 gradient-direction note prevented a
-  wrong implementation)
+ (measured load-bearing: the Task 5 gradient-direction note prevented a
+ wrong implementation)
 - **Review verdicts and severity calibration** — what is Important vs Minor
 - **Review-loop adjudication** — deciding a finding is a false positive
 - **Escalate-to-human recognition** — knowing the plan itself is wrong
@@ -87,29 +87,29 @@ exploration. Current writing-plans optimizes for implementer success, not
 execution economics. Changes to test:
 
 1. **Task right-sizing guidance.** Today's plans produce tasks as small as
-   "create .gitignore" — each costing a full dispatch + review cycle
-   (~$0.60-1.00 fixed overhead). Add: "A task is the smallest unit that
-   carries its own test cycle and is worth a fresh reviewer's gate. Merge
-   setup/config steps into the task that needs them; split only at
-   boundaries where a reviewer could meaningfully reject." Fractals' plan
-   would drop from 10 tasks to ~7. Validate: dispatch count falls, gates
-   hold, review granularity still catches the planted defect.
+ "create .gitignore" — each costing a full dispatch + review cycle
+ (~$0.60-1.00 fixed overhead). Add: "A task is the smallest unit that
+ carries its own test cycle and is worth a fresh reviewer's gate. Merge
+ setup/config steps into the task that needs them; split only at
+ boundaries where a reviewer could meaningfully reject." Fractals' plan
+ would drop from 10 tasks to ~7. Validate: dispatch count falls, gates
+ hold, review granularity still catches the planted defect.
 2. **Structured `## Global Constraints` section** in the plan header
-   (version floors, naming/copy rules, platform requirements). Today these
-   live in design.md prose and reach reviewers only if the controller
-   remembers to paste them (a `go 1.26.1` floor violation shipped because
-   none did). A fixed heading makes them mechanically extractable —
-   `task-brief` can append them to every brief automatically (small script
-   change), removing a controller responsibility entirely.
+ (version floors, naming/copy rules, platform requirements). Today these
+ live in design.md prose and reach reviewers only if the controller
+ remembers to paste them (a `go 1.26.1` floor violation shipped because
+ none did). A fixed heading makes them mechanically extractable —
+ `task-brief` can append them to every brief automatically (small script
+ change), removing a controller responsibility entirely.
 3. **Per-task `Interfaces:` line** (consumes/produces, exact signatures).
-   The controller currently re-derives cross-task interfaces per dispatch
-   (its main legitimate "restating"), and implementers spend ~13 tool calls
-   re-discovering context. The planner already knows the interfaces; one
-   line per task moves the work to where it is done once.
+ The controller currently re-derives cross-task interfaces per dispatch
+ (its main legitimate "restating"), and implementers spend ~13 tool calls
+ re-discovering context. The planner already knows the interfaces; one
+ line per task moves the work to where it is done once.
 4. **Per-task model-tier recommendation** from the planner ("mechanical /
-   standard / judgment"). The planner has the best information for the
-   Model Selection decision the controller currently re-makes per dispatch;
-   the controller keeps override authority.
+ standard / judgment"). The planner has the best information for the
+ Model Selection decision the controller currently re-makes per dispatch;
+ the controller keeps override authority.
 
 Validation: micro-test the planner output shape (recipe-style, per the
 instruction-design doctrine), then full runs. Note the 2026-06-10 result:
@@ -166,7 +166,7 @@ opus controllers showed; review loops, per-task Important→fix→re-review,
 and omnibus-fixer rules followed in both runs; the run-1 controller
 caught a fixer side-effect (`go mod tidy` removed cobra) before
 re-review — real adjudication, not silent absorption. But neither run
-surfaced a BLOCKED/⚠️ event (the escalation points were never stressed)
+surfaced a BLOCKED/️ event (the escalation points were never stressed)
 and final reviews ran on sonnet rather than the most capable tier. The
 N=5 quality gates + full judgment audit below remain mandatory before
 any skill change.
@@ -177,24 +177,24 @@ but the controller is also where most judgment points live, so this rung is
 designed judgment-first:
 
 1. **Primary form — judgment moved up front, mechanics cheapened:** the
-   expensive model does the judgment-dense work at plan time (L1's
-   Interfaces lines, ambiguity resolutions, per-task constraints — i.e.
-   the dispatch curation is pre-written into the plan). The mid-tier
-   execution session then runs a loop that is genuinely mechanical:
-   extract brief, dispatch, run script, route verdicts. Explicit
-   escalation rules in the skill: on BLOCKED, on any ⚠️ item, on a
-   suspected false positive, or on anything the plan does not already
-   answer, the cheap controller STOPS and escalates (to the human, or to
-   a fresh expensive-model consultation dispatch) — it never resolves
-   judgment alone.
+ expensive model does the judgment-dense work at plan time (L1's
+ Interfaces lines, ambiguity resolutions, per-task constraints — i.e.
+ the dispatch curation is pre-written into the plan). The mid-tier
+ execution session then runs a loop that is genuinely mechanical:
+ extract brief, dispatch, run script, route verdicts. Explicit
+ escalation rules in the skill: on BLOCKED, on any ️ item, on a
+ suspected false positive, or on anything the plan does not already
+ answer, the cheap controller STOPS and escalates (to the human, or to
+ a fresh expensive-model consultation dispatch) — it never resolves
+ judgment alone.
 2. **Gates beyond the standard N=5:** a judgment audit — every
-   BLOCKED/⚠️/adjudication event in the gate runs interrogated via
-   session-resume and scored against how the opus-controller baseline
-   handled the same class of event; any silently-absorbed judgment call
-   (cheap controller resolving what it should have escalated) fails the
-   rung regardless of scenario verdicts.
+ BLOCKED/️/adjudication event in the gate runs interrogated via
+ session-resume and scored against how the opus-controller baseline
+ handled the same class of event; any silently-absorbed judgment call
+ (cheap controller resolving what it should have escalated) fails the
+ rung regardless of scenario verdicts.
 3. **User authority preserved:** the skill recommends, never enforces, the
-   execution-session tier.
+ execution-session tier.
 
 Caveat from this campaign: cheap-model turn inflation was measured on
 multi-step *work*, not dispatch loops; whether a mid-tier controller holds
@@ -226,21 +226,21 @@ reviewers are bad" into recorded evidence.
 ### L4 — Resident-context diet (est. −$0.5-1/run)
 
 - `task-brief --list` mode: controller reads task headings + Global
-  Constraints, never the full plan (the plan body is already delivered via
-  briefs).
+ Constraints, never the full plan (the plan body is already delivered via
+ briefs).
 - Reports trim 15 → 8 lines.
 - SKILL.md minification pass (every section added this week re-justified
-  at composition-recipe density; Codex pays ~10k chars × ~500 re-reads per
-  long session).
+ at composition-recipe density; Codex pays ~10k chars × ~500 re-reads per
+ long session).
 
 ### L5 — Re-litigations (explicitly flagged, maintainer-vetoed or counter-thesis)
 
 Recorded for completeness; each requires Jesse's explicit reversal before
 any experiment:
 - **Scoped re-reviews** (verify fix + regression scan instead of full
-  re-review): vetoed 2026-06-09; worth ~$0.50/run at most.
+ re-review): vetoed 2026-06-09; worth ~$0.50/run at most.
 - **Dispatch-time task batching**: counter-thesis (see guardrail). L1.1
-  is the sanctioned form.
+ is the sanctioned form.
 
 ## Budget and sequencing
 

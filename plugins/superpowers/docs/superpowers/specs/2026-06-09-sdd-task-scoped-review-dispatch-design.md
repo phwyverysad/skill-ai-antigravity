@@ -1,4 +1,4 @@
-# SDD Task-Scoped Review Dispatch
+﻿# SDD Task-Scoped Review Dispatch
 
 Make subagent-driven-development's per-task reviews cheaper and faster without weakening them, by scoping per-task review prompts to the task and stopping redundant work — while final branch review stays broad.
 
@@ -46,33 +46,33 @@ re-deriving the diff; controller coordination was half the dollars), and
 evidence-rule narration.
 
 - **Iteration 1:** turn-count-beats-token-price model guidance (mid-tier floor
-  for multi-step work), optional inline diffs, cite-don't-narrate evidence,
-  Important = cannot-trust-until-fixed, fixes dispatched only for
-  Critical/Important. Result: 68.2 min / 22.9M — tokens down 29%, wall-clock
-  flat; controllers pasted the diff in only 2 of 22 review dispatches when
-  phrasing was optional.
+ for multi-step work), optional inline diffs, cite-don't-narrate evidence,
+ Important = cannot-trust-until-fixed, fixes dispatched only for
+ Critical/Important. Result: 68.2 min / 22.9M — tokens down 29%, wall-clock
+ flat; controllers pasted the diff in only 2 of 22 review dispatches when
+ phrasing was optional.
 - **Iteration 2:** per-task spec and quality reviews merged into one
-  `task-reviewer-prompt.md` (one reviewer, one reading of the diff, two
-  verdicts; one fix dispatch addresses both kinds of findings); implementers
-  run the focused test while iterating, full suite once before commit.
-  Result (go-fractals): 47.5 min / 15.7M / $13.55 — beat baseline on every
-  axis, blind-judged 9/10 vs baseline 7/10.
+ `task-reviewer-prompt.md` (one reviewer, one reading of the diff, two
+ verdicts; one fix dispatch addresses both kinds of findings); implementers
+ run the focused test while iterating, full suite once before commit.
+ Result (go-fractals): 47.5 min / 15.7M / $13.55 — beat baseline on every
+ axis, blind-judged 9/10 vs baseline 7/10.
 - **Iteration 3:** Calibration names merge-blocking maintainability damage
-  (verbatim duplication, swallowed errors, assertion-free tests) as
-  Important and Minor findings must be pasted into the final review for
-  triage; reviewer skepticism extended to the implementer's design
-  rationales ("left it per YAGNI" is a claim, not a verdict); diff handed
-  to reviewers as a file (`git diff > /tmp/sdd-task-N.diff`, redirected so
-  it never enters the controller's context; one Read call for the
-  reviewer) after paste-into-prompt guidance went unadopted (0-6 of 11-17
-  dispatches) for locally-rational context-economics reasons.
+ (verbatim duplication, swallowed errors, assertion-free tests) as
+ Important and Minor findings must be pasted into the final review for
+ triage; reviewer skepticism extended to the implementer's design
+ rationales ("left it per YAGNI" is a claim, not a verdict); diff handed
+ to reviewers as a file (`git diff > /tmp/sdd-task-N.diff`, redirected so
+ it never enters the controller's context; one Read call for the
+ reviewer) after paste-into-prompt guidance went unadopted (0-6 of 11-17
+ dispatches) for locally-rational context-economics reasons.
 - **Final frozen config (e355795), all five scenarios pass:** go-fractals
-  44.4 min / 13.4M / $11.67 (-32% time, -37% tokens, -27% dollars vs
-  baseline); svelte-todo 62.8 / 19.7M / $15.76 (-21% / -28% / -25%);
-  rejects-extra-features $1.31 (vs $1.88); spec-reviewer-flaws flat; the
-  planted-defect scenario (v3: open-flag transparency bar for judgment
-  calls, must-fix bar for a test whose name promises verification it
-  never performs) passes with the defect caught and fixed.
+ 44.4 min / 13.4M / $11.67 (-32% time, -37% tokens, -27% dollars vs
+ baseline); svelte-todo 62.8 / 19.7M / $15.76 (-21% / -28% / -25%);
+ rejects-extra-features $1.31 (vs $1.88); spec-reviewer-flaws flat; the
+ planted-defect scenario (v3: open-flag transparency bar for judgment
+ calls, must-fix bar for a test whose name promises verification it
+ never performs) passes with the defect caught and fixed.
 
 ### Iterations 4-5 (2026-06-10): variance honesty, structural fixes, positive recipes
 
@@ -85,30 +85,30 @@ sessions (full log with negative results:
 final config:
 
 - **Adopted:** final-review package (final reviewer 33→6 turns at
-  controller-model prices); REQUIRED `model:` line in both templates
-  (prose guidance decayed mid-session once, inheriting opus for 17
-  dispatches, +$5); task-brief + report files (`scripts/task-brief`;
-  fidelity anchor, modest context savings); progress ledger in
-  `<git-dir>/sdd/progress.md` (real sessions re-dispatched entire
-  completed task sequences after compaction — 269 dispatches for ~22
-  tasks); omnibus final fixer (a real session's per-finding fix wave cost
-  more than all its tasks); scoped fix tests; unique SHA-range collateral
-  names (worktree/submodule-safe); dispatch-composition recipe and
-  reviewer named-risk budget (micro-tested: positive recipe 3.0
-  transcribed values vs prohibition 4.4 vs control 3.6 — prohibitions can
-  backfire; see `2026-06-10-positive-instruction-redesign-design.md`).
+ controller-model prices); REQUIRED `model:` line in both templates
+ (prose guidance decayed mid-session once, inheriting opus for 17
+ dispatches, +$5); task-brief + report files (`scripts/task-brief`;
+ fidelity anchor, modest context savings); progress ledger in
+ `<git-dir>/sdd/progress.md` (real sessions re-dispatched entire
+ completed task sequences after compaction — 269 dispatches for ~22
+ tasks); omnibus final fixer (a real session's per-finding fix wave cost
+ more than all its tasks); scoped fix tests; unique SHA-range collateral
+ names (worktree/submodule-safe); dispatch-composition recipe and
+ reviewer named-risk budget (micro-tested: positive recipe 3.0
+ transcribed values vs prohibition 4.4 vs control 3.6 — prohibitions can
+ backfire; see `2026-06-10-positive-instruction-redesign-design.md`).
 - **Tested and declined:** controller turn batching and parallel-call
-  pipelining (controller emits exactly one tool call per message — 0
-  multi-tool messages in every run; 46% of its turns are
-  thinking/narration, a prompt-immune floor); background-dispatch
-  pipelining (mechanism adopted 7/28 but benefit below the ±6 min noise
-  floor on these scenarios).
+ pipelining (controller emits exactly one tool call per message — 0
+ multi-tool messages in every run; 46% of its turns are
+ thinking/narration, a prompt-immune floor); background-dispatch
+ pipelining (mechanism adopted 7/28 but benefit below the ±6 min noise
+ floor on these scenarios).
 - **Final validated config (b81f35b family), all gates pass:** go-fractals
-  54.1-54.7 min / 14.4-16.6M / $12.81-14.31 (baseline 64.9 / 21.2M /
-  $16.07); svelte-todo 55.0 min / 19.3M / $14.99 (baseline 79.7 / 27.3M /
-  $20.98); planted-defect pass / $2.77. Across all 8 same-design fractals
-  runs: 44.4-57.1 min / 13.4-20.0M / $11.67-14.84 — the worst draw beats
-  baseline on every axis; typical mid-band savings ~20-25%.
+ 54.1-54.7 min / 14.4-16.6M / $12.81-14.31 (baseline 64.9 / 21.2M /
+ $16.07); svelte-todo 55.0 min / 19.3M / $14.99 (baseline 79.7 / 27.3M /
+ $20.98); planted-defect pass / $2.77. Across all 8 same-design fractals
+ runs: 44.4-57.1 min / 13.4-20.0M / $11.67-14.84 — the worst draw beats
+ baseline on every axis; typical mid-band savings ~20-25%.
 
 ## Design
 
@@ -137,17 +137,17 @@ Stop delegating to `requesting-code-review/code-reviewer.md`. The per-task quali
 
 - Remove the `git worktree add` how-to sentence. The read-only rule stays; a diff-scoped spec review never needs a checkout of another revision.
 - Resolve the tension between the diff-only guard and "verify everything independently": spec compliance is judged by reading the diff against the requirements. The implementer's TDD evidence covers "it runs" — apply the shared test principle.
-- New third verdict channel: requirements that cannot be verified from the diff (live in unchanged code, span tasks) are reported as explicit "⚠️ Cannot verify from diff — controller should check X" items, instead of either crawling or silently passing. The flowchart's binary pass/fail diamond cannot route this, so the controller guidance (§3) defines the handling: ⚠️ items do not block dispatching the quality reviewer, but the controller must resolve each one itself (it holds the plan and cross-task context) before marking the task complete; an item the controller confirms is a real gap is treated as a failed spec review and goes back to the implementer.
+- New third verdict channel: requirements that cannot be verified from the diff (live in unchanged code, span tasks) are reported as explicit "️ Cannot verify from diff — controller should check X" items, instead of either crawling or silently passing. The flowchart's binary pass/fail diamond cannot route this, so the controller guidance (§3) defines the handling: ️ items do not block dispatching the quality reviewer, but the controller must resolve each one itself (it holds the plan and cross-task context) before marking the task complete; an item the controller confirms is a real gap is treated as a failed spec review and goes back to the implementer.
 - Replace the fabricated premise "The implementer finished suspiciously quickly" with grounded skepticism: treat the implementer's report as unverified claims about the code. Same distrust, no invented fact.
 
 ### 3. `skills/subagent-driven-development/SKILL.md` controller changes
 
 - **Model Selection:** replace "Architecture, design, and review tasks: use the most capable available model" with judgment guidance — pick reviewer models the way implementer models are picked, scaled to the diff's size, complexity, and risk. The "Task complexity signals" list is rescoped to make clear its bullets describe implementation tasks; reviewer model choice follows the same judgment, so a narrow diff review does not automatically map to "broad codebase understanding → most capable model."
 - **Reviewer prompt construction** (new guidance near Red Flags): when dispatching reviewers, do not write open-ended directives ("check all uses," "run race tests if useful") without a concrete task-specific reason; do not ask reviewers to re-run tests the implementer already ran on the same code; do not pre-judge findings for the reviewer (never instruct a reviewer to ignore or not flag a specific issue — adjudicate suspected false positives in the review loop instead); per-task reviews are task-scoped gates — the broad review happens once, at the final whole-branch review. (The pre-judging rule was added after a live eval run caught the controller fabricating a "the plan forbids a shared helper" claim and instructing the quality reviewer not to flag a planted DRY violation.) Controllers must also include the spec/design's global constraints that bind the task — version floors, naming and copy rules, platform requirements — in the requirements they paste: a live run shipped a `go 1.26.1` module floor against a "Go 1.21+" design because no reviewer ever saw the constraint. And controllers must specify a model explicitly on every dispatch — an omitted model inherits the session's (usually most expensive) model, which silently defeats model selection.
-- **Handling spec-reviewer ⚠️ items** (new guidance, alongside Handling Implementer Status): the controller resolves each "cannot verify from diff" item itself before marking the task complete; confirmed gaps go back to the implementer as failed spec review.
+- **Handling spec-reviewer ️ items** (new guidance, alongside Handling Implementer Status): the controller resolves each "cannot verify from diff" item itself before marking the task complete; confirmed gaps go back to the implementer as failed spec review.
 - **Final review stays broad, explicitly:** the final whole-branch reviewer dispatch node gains an explicit pointer to `../requesting-code-review/code-reviewer.md`. (Today that template is reachable only through the per-task quality prompt's delegation; once that delegation is removed, an unreferenced final-review template would be orphaned.) The Integration section's note that `superpowers:requesting-code-review` provides "the code review template for reviewer subagents" is corrected to apply to the final review only.
 - **Example workflow:** the quality-reviewer lines in the example are updated to the new verdict vocabulary ("Task quality: Approved"); the final reviewer's "ready to merge" line stays.
-- Flowchart topology is unchanged; the ⚠️ channel is handled by controller guidance, not a new graph branch.
+- Flowchart topology is unchanged; the ️ channel is handled by controller guidance, not a new graph branch.
 
 ## What this does not fix (known, deferred)
 

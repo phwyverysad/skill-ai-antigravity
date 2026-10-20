@@ -1,124 +1,124 @@
-# 🚀 Antigravity AI Skills & MCP All-In-One Pack
+# Antigravity AI Skills and MCP All-In-One Pack
 
-ชุดสำรองข้อมูลและตัวติดตั้งอัตโนมัติ (All-In-One) สำหรับ **Antigravity App** รวมทุก **Skills**, **Plugins**, **MCP Servers**, และ **Agent Directives** ที่ใช้งานอยู่ทั้งหมด พร้อมคำสั่งติดตั้งบรรทัดเดียวจบ รองรับการรันบน Windows ทุกเครื่องโดยอัตโนมัติ
+Comprehensive backup and automated installer for the **Antigravity App**. Bundles all currently active **Skills**, **Plugins**, **MCP Servers**, and **Agent Directives** with a single-command installation setup for Windows environments.
 
 ---
 
-## ⚡ คำสั่งติดตั้ง All-In-One (1-Click Install)
+## One-Click Installation
 
-เปิด **PowerShell** แล้วคัดลอกคำสั่งด้านล่างไปวาง จากนั้นกด `Enter`:
+Open **PowerShell** and run the following command:
 
 ```powershell
 irm https://raw.githubusercontent.com/phwyverysad/skill-ai-antigravity/main/install.ps1 | iex
 ```
 
-> **หมายเหตุ:** หากติดนโยบาย Execution Policy สามารถรันคำสั่งนี้แทนได้:
+> **Note:** If restricted by PowerShell Execution Policy, run:
 > ```powershell
 > powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/phwyverysad/skill-ai-antigravity/main/install.ps1 | iex"
 > ```
 
 ---
 
-### 📦 หรือติดตั้งแบบ Manual (Clone Repository)
+### Manual Installation (Clone Repository)
 
 ```powershell
 git clone https://github.com/phwyverysad/skill-ai-antigravity.git
 cd skill-ai-antigravity
 .\install.ps1
 ```
-*(หรือดับเบิ้ลคลิกที่ไฟล์ `install.bat` บนเครื่อง)*
+*(Or double-click `install.bat` in File Explorer)*
 
 ---
 
-## 🛡️ ระบบ Safe Merge & Auto Backup
+## Safe Merge and Automated Backup
 
-ตัวติดตั้งมาพร้อมระบบความปลอดภัย:
-- ตรวจจับโฟลเดอร์ผู้ใช้ (`%USERPROFILE%`) และเวอร์ชัน Python ในเครื่องให้อัตโนมัติ (ไม่ผูกติดกับ Username เครื่องเดิม)
-- หากมีไฟล์ Config เดิมอยู่แล้ว (`mcp_config.json`, `config.json`, `skills.json`, `GEMINI.md`) ระบบจะทำการสำรองข้อมูลเดิมเป็น `.bak_<timestamp>` ไว้เสมอ ข้อมูลที่มีอยู่เดิมจะไม่สูญหาย
+The installer provides safety mechanisms:
+- Dynamically resolves user directories (`%USERPROFILE%`) and local Python installations without hardcoded system paths.
+- If existing configuration files are found (`mcp_config.json`, `config.json`, `skills.json`, `GEMINI.md`), timestamped backups (`.bak_<timestamp>`) are automatically preserved before merging settings. Existing personal configurations remain intact.
 
 ---
 
-## 🧩 สิ่งที่รวมอยู่ในชุดนี้ (Included Components)
+## Included Components
 
-### 1. 🧠 AI Skills & Plugins
+### 1. AI Skills and Plugins
 - **Superpowers Plugin**:
-  - `brainstorming` - สำรวจความต้องการ ออกแบบก่อนลงมือเขียนโค้ด
-  - `test-driven-development` - แนวคิด TDD เขียนเทสต์ก่อนโค้ดจริง
-  - `subagent-driven-development` - สั่งงาน Subagent แยกส่วนแบบขนาน
-  - `executing-plans` & `writing-plans` - วางแผนและดำเนินงานตามสเต็ป
-  - `systematic-debugging` - วินิจฉัยข้อผิดพลาดอย่างเป็นระบบ
-  - `using-superpowers`, `writing-skills`, `verification-before-completion`, ฯลฯ
+  - `brainstorming` - Explore intent and design architectures before implementation
+  - `test-driven-development` - TDD methodology and test-first verification
+  - `subagent-driven-development` - Dispatch and coordinate parallel specialized subagents
+  - `executing-plans` and `writing-plans` - Structured implementation workflows
+  - `systematic-debugging` - Evidence-based defect isolation and resolution
+  - `using-superpowers`, `writing-skills`, `verification-before-completion`, and more
 - **Caveman Suite (14+ Skills)**:
   - `cavecrew`, `caveman`, `caveman-commit`, `caveman-compress`, `caveman-discover`
   - `investigate-first`, `lean-build`, `safe-refactor`, `surgical-patch`, `verify-and-stop`, `migration`
 - **Official Plugins**:
-  - `chrome-devtools-plugin` (การดีบักและออดิทหน้าเว็บ / a11y / lcp / memory leak)
-  - `firebase` (Firestore, App Hosting, Auth, Rules)
-  - `gdocs`, `gdrive`, `gsheets`, `gslides` (Google Workspace integration)
+  - `chrome-devtools-plugin` - Web inspection, performance auditing, a11y, LCP, and memory leak analysis
+  - `firebase` - Cloud Firestore, Firebase App Hosting, Authentication, and Security Rules authoring
+  - `gdocs`, `gdrive`, `gsheets`, `gslides` - Google Workspace integrations
 
 ---
 
-### 2. 🔌 MCP Servers (Model Context Protocol)
+### 2. MCP Servers (Model Context Protocol)
 - **Roblox Studio MCP (`Roblox_Studio`)**:
-  - บริดจ์สคริปต์ `roblox_studio_bridge.py` ค้นหา `StudioMCP.exe` เวอร์ชันล่าสุดในเครื่องให้อัตโนมัติ
-  - สคีมาเครื่องมือครบชุด 29 คำสั่ง (ค้นหา game tree, รัน Luau, จับภาพหน้าจอ, ดึง console output, จัดการ asset)
+  - `roblox_studio_bridge.py` automatically discovers and links to the newest `StudioMCP.exe` binary
+  - Full schema set of 29 tool definitions (Game Tree traversal, Luau execution, screen capture, console streaming, asset management)
 - **SketchUp MCP (`sketchup`)**:
-  - แพ็กเกจ `sketchup-mcp` (Python Server + Ruby Bridge `su_mcp.rb`)
-  - รองรับการประเมินโค้ด Ruby, จัดการ Component, สร้างเดือยไม้ (joinery)
+  - Full `sketchup-mcp` package (Python MCP Server + Ruby bridge extension `su_mcp.rb`)
+  - Supports Ruby evaluation, component manipulation, and joinery generation
 - **Windows Automation MCP (`windows-mcp` / `windows_mcp`)**:
-  - ติดตั้งผ่าน `uv tool install windows-mcp` หรือ CLI
-  - คำสั่งควบคุมหน้าต่าง, จับภาพหน้าจอ, เลื่อนเมาส์, รัน PowerShell, ตรวจจับ UI Tree
+  - Installed via `uv tool` or CLI
+  - Desktop control tools: window inspection, screenshot capture, mouse, keyboard, PowerShell execution, and UI Tree scraping
 - **Chrome DevTools MCP (`chrome_devtools`)**:
-  - สคีมาควบคุมเบราว์เซอร์ 31 รายการ (คลิก, พิมพ์ข้อความ, ถ่ายภาพ, ตรวจสอบ Network, ประเมินประสิทธิภาพ)
+  - Complete browser automation schema collection across 31 endpoints (clicks, navigation, snapshots, network requests, trace profiling)
 
 ---
 
-### 3. ⚙️ Agent Rules & Directives
+### 3. Agent Rules and Directives
 - **`GEMINI.md` (Full Autonomous Execution Mode)**:
-  - คำสั่ง Directive สากลสำหรับเปิดโหมด Autonomous: ทำงาน แก้ไขไฟล์ และทดสอบได้โดยไม่ต้องหยุดถามคอนเฟิร์มขั้นตอนที่ไม่จำเป็น
+  - Universal autonomous directive: Authorizes proactive file modifications, script execution, diagnostics, and build validations without conversational round-trips.
 
 ---
 
-## 📁 โครงสร้างโปรเจกต์ (Repository Structure)
+## Repository Structure
 
 ```text
 skill-ai-antigravity/
-├── install.ps1                   # สคริปต์ติดตั้ง All-in-One (PowerShell)
-├── install.bat                   # ดับเบิ้ลคลิกสำหรับติดตั้งบน Windows
-├── README.md                     # คู่มือและเอกสารการใช้งาน
-├── config/
-│   ├── GEMINI.md                 # Global Autonomous Directives
-│   ├── mcp_config.template.json  # เทมเพลตตั้งค่า MCP Servers
-│   ├── skills.template.json      # เทมเพลตลงทะเบียน Path Skills
-│   ├── plugins.template.json     # เทมเพลต Plugin ของระบบ
-│   └── import_manifest.json      # Manifest นำเข้า Plugin
-├── mcp/
-│   ├── Roblox_Studio/            # สคริปต์บริดจ์และ Schema 29 คำสั่ง
-│   ├── sketchup/                 # ซอร์สโค้ด SketchUp MCP และ Schema
-│   ├── windows-mcp/              # Schema เครื่องมือ Windows Automation
-│   └── chrome_devtools/          # Schema เครื่องมือ DevTools
-├── plugins/
-│   ├── superpowers/              # ซอร์สโค้ด Superpowers ทั้งหมด
-│   ├── chrome-devtools-plugin/   # Plugin DevTools ทางการ
-│   ├── firebase/                 # Plugin Firebase ทางการ
-│   ├── gdocs/                    # Plugin Google Docs
-│   ├── gdrive/                   # Plugin Google Drive
-│   ├── gsheets/                  # Plugin Google Sheets
-│   └── gslides/                  # Plugin Google Slides
-└── skills/
-    └── caveman/                  # ซอร์สโค้ด Caveman และซับสกิลทั้งหมด
+|-- install.ps1                   # All-in-one PowerShell installer
+|-- install.bat                   # Batch wrapper for Windows
+|-- README.md                     # Documentation
+|-- config/
+|   |-- GEMINI.md                 # Global autonomous agent directives
+|   |-- mcp_config.template.json  # MCP server configuration template
+|   |-- skills.template.json      # Skills path registration template
+|   |-- plugins.template.json     # Plugin registration template
+|   `-- import_manifest.json      # Plugin import manifest
+|-- mcp/
+|   |-- Roblox_Studio/            # Bridge script and 29 tool schemas
+|   |-- sketchup/                 # SketchUp MCP source and tool schemas
+|   |-- windows-mcp/              # Windows desktop automation schemas
+|   `-- chrome_devtools/          # Chrome DevTools schemas
+|-- plugins/
+|   |-- superpowers/              # Superpowers plugin and skill repository
+|   |-- chrome-devtools-plugin/   # Official DevTools plugin
+|   |-- firebase/                 # Official Firebase plugin
+|   |-- gdocs/                    # Google Docs plugin
+|   |-- gdrive/                   # Google Drive plugin
+|   |-- gsheets/                  # Google Sheets plugin
+|   `-- gslides/                  # Google Slides plugin
+`-- skills/
+    `-- caveman/                  # Caveman suite and skills
 ```
 
 ---
 
-## 🔍 การตรวจสอบหลังการติดตั้ง (Verification)
+## Post-Installation Verification
 
-เมื่อรันตัวติดตั้งเสร็จแล้ว:
-1. ปิดและเปิด **Antigravity App** ใหม่อีกครั้ง
-2. ตรวจสอบว่าในแชท AI มีการโหลด Skills เช่น `brainstorming`, `caveman`, `firebase`
-3. เรียกดูรายการ MCP Servers ว่าพร้อมใช้งานหรือไม่
+After running the installer:
+1. Restart the **Antigravity App**.
+2. Verify that skills such as `brainstorming`, `caveman`, and `firebase` are active in the agent session.
+3. Confirm MCP tool registrations under the agent's available tool list.
 
 ---
 
-## 📄 License
-รวบรวมและจัดทำขึ้นเพื่อการใช้งานและสำรองข้อมูลสำหรับ Antigravity โดยซอร์สโค้ดของแต่ละโปรเจกต์ (Caveman, Superpowers, SketchUp MCP) ยังคงเป็นไปตามสัญญาอนุญาต (License) ของผู้พัฒนาดั้งเดิม
+## License
+Curated and structured for Antigravity application backups. Subordinate packages (Caveman, Superpowers, SketchUp MCP) retain their respective original upstream licenses.

@@ -1,14 +1,14 @@
----
+﻿---
 name: xcode-project-setup
 description: Safely modifies Xcode projects (.pbxproj) to add Swift Packages and link files. Use this skill whenever an iOS project needs dependencies installed (e.g. Firebase, Alamofire).
 compatibility: Requires Swift to be installed locally and macOS environment.
 metadata:
-  category: ApplicationDevelopment
+ category: ApplicationDevelopment
 ---
 
 # Xcode Project Setup
 
-## ⛔️ CRITICAL RULES & ENVIRONMENT CHECKS
+## ️ CRITICAL RULES & ENVIRONMENT CHECKS
 
 Before performing any Xcode setup or file manipulation, you **MUST** adhere to
 the following rules. A hefty fee will be applied if you violate them.
@@ -40,9 +40,9 @@ environment:
 
 - Run `swift --version` before proceeding.
 - If the Swift command is not found, you must stop and recommend the user
-  install the Swift toolchain (e.g., via `xcode-select --install` on macOS), or
-  ask if you can attempt to install it for them. Do not attempt to proceed
-  without Swift.
+ install the Swift toolchain (e.g., via `xcode-select --install` on macOS), or
+ ask if you can attempt to install it for them. Do not attempt to proceed
+ without Swift.
 
 ### 5. Mandatory Linker Flags for Static Frameworks (Firebase)
 
@@ -58,7 +58,7 @@ flag to `OTHER_LDFLAGS` when adding Firebase products.** However, you should
 still verify it is present in the build settings if you encounter issues.
 
 - Failing to include this flag when adding Firebase dependencies is a critical
-  error.
+ error.
 
 ______________________________________________________________________
 
@@ -92,17 +92,17 @@ recent version of the Firebase iOS SDK. Check for the latest release version at
 [https://github.com/firebase/firebase-ios-sdk/releases](https://github.com/firebase/firebase-ios-sdk/releases).
 
 - Use the most recent version number (e.g., `11.x.y`) in your commands instead
-  of hardcoded placeholders.
+ of hardcoded placeholders.
 
 ### Understanding the Script's Actions
 
 When adding a Swift Package to an Xcode project, two distinct steps must occur:
 
 1. Adding the package repository dependency (e.g.,
-   `https://github.com/Alamofire/Alamofire`).
+ `https://github.com/Alamofire/Alamofire`).
 1. Selecting the target (e.g., `MyApp`), navigating to **General > Frameworks,
-   Libraries, and Embedded Content**, and hitting the `+` button to explicitly
-   link the specific product modules (e.g., `Alamofire`).
+ Libraries, and Embedded Content**, and hitting the `+` button to explicitly
+ link the specific product modules (e.g., `Alamofire`).
 
 **The provided `xcode_spm_setup` Swift script automatically handles BOTH of
 these steps for you.** By passing the list of modules as arguments, it safely
@@ -112,7 +112,7 @@ target's Frameworks build phase. You do not need to do any manual linking.
 ## Usage
 
 1. **Locate the package path:** Find the absolute path to this skill's
-   `scripts/xcode_spm_setup` directory on disk.
+ `scripts/xcode_spm_setup` directory on disk.
 1. **Execute:** Run the native `swift run` command using the signature below:
 
 ```bash

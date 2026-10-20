@@ -1,4 +1,4 @@
-# CLAUDE.md — caveman
+﻿# CLAUDE.md — caveman
 
 ## README is a product artifact
 
@@ -49,65 +49,65 @@ Post-cleanup layout. Sources of truth at the top, distribution mirrors below, bu
 
 ```
 caveman/
-├── README.md                    # Front door (product pitch)
-├── INSTALL.md                   # Per-agent install commands
-├── CONTRIBUTING.md              # Dev guide
-├── CLAUDE.md                    # This file (maintainer instructions)
-├── AGENTS.md / GEMINI.md        # Autodiscovery files (must stay at root)
+├── README.md # Front door (product pitch)
+├── INSTALL.md # Per-agent install commands
+├── CONTRIBUTING.md # Dev guide
+├── CLAUDE.md # This file (maintainer instructions)
+├── AGENTS.md / GEMINI.md # Autodiscovery files (must stay at root)
 │
-├── install.sh / install.ps1     # 30-line shims → bin/install.js
+├── install.sh / install.ps1 # 30-line shims → bin/install.js
 │
-├── bin/                         # Unified installer
-│   ├── install.js               # Single source for all 30+ agents (PROVIDERS array)
-│   └── lib/settings.js          # JSONC-tolerant settings.json reader/writer
+├── bin/ # Unified installer
+│ ├── install.js # Single source for all 30+ agents (PROVIDERS array)
+│ └── lib/settings.js # JSONC-tolerant settings.json reader/writer
 │
-├── skills/                      # ALL skills, single source of truth
-│   ├── caveman/{SKILL.md, README.md}
-│   ├── caveman-commit/{SKILL.md, README.md}
-│   ├── caveman-review/{SKILL.md, README.md}
-│   ├── caveman-help/{SKILL.md, README.md}
-│   ├── caveman-stats/{SKILL.md, README.md}
-│   ├── caveman-compress/{SKILL.md, README.md, scripts/}
-│   └── cavecrew/{SKILL.md, README.md}
+├── skills/ # ALL skills, single source of truth
+│ ├── caveman/{SKILL.md, README.md}
+│ ├── caveman-commit/{SKILL.md, README.md}
+│ ├── caveman-review/{SKILL.md, README.md}
+│ ├── caveman-help/{SKILL.md, README.md}
+│ ├── caveman-stats/{SKILL.md, README.md}
+│ ├── caveman-compress/{SKILL.md, README.md, scripts/}
+│ └── cavecrew/{SKILL.md, README.md}
 │
-├── agents/                      # cavecrew subagents (single source — kept at root for plugin auto-discovery)
-│   └── docs/                    # profile-registry docs — NOT agents (see note below)
-├── commands/                    # Codex/Gemini TOML command stubs (root for plugin auto-discovery)
+├── agents/ # cavecrew subagents (single source — kept at root for plugin auto-discovery)
+│ └── docs/ # profile-registry docs — NOT agents (see note below)
+├── commands/ # Codex/Gemini TOML command stubs (root for plugin auto-discovery)
 │
-├── src/                         # Internal source — not auto-discovered by plugin
-│   ├── hooks/                   # Claude Code hooks (installer reads here)
-│   ├── rules/                   # Auto-activation rule body (single source)
-│   ├── tools/                   # caveman-init.js (per-repo rule writer)
-│   └── mcp-servers/             # caveman-shrink npm-published MCP middleware
+├── src/ # Internal source — not auto-discovered by plugin
+│ ├── hooks/ # Claude Code hooks (installer reads here)
+│ ├── rules/ # Auto-activation rule body (single source)
+│ ├── tools/ # caveman-init.js (per-repo rule writer)
+│ └── mcp-servers/ # caveman-shrink npm-published MCP middleware
 │
-├── packages/                    # Current public packages
-│   ├── agent/                   # historical copy; source = caveman-agent-sdk
-│   ├── create-caveman-agent/    # historical copy; source = caveman-agent-sdk
-│   ├── cli/                     # @caveman-ai/cli
-│   ├── pi-extension/            # @caveman-ai/pi — native Pi extension (bundled into the CLI, published on `pi-v*` tags)
-│   ├── sdk/                     # TypeScript + Python gateway clients
-│   ├── subagent-tax/            # Local harness-prefix benchmark
-│   └── shared/                  # Contracts + binary installer
-├── engine/ · proxy/             # BSL local compression runtime + provider proxy
-├── rewriter/                    # Prompt rewriter
-├── mcp/ · mem/ · shrink/        # Recovery tools, memory, output compression
-├── browse/                      # consumer copy; source = caveman-browse
-├── extension/                   # MV3 extension source
-├── shared/                       # Provider catalog + BSL platform libraries
+├── packages/ # Current public packages
+│ ├── agent/ # historical copy; source = caveman-agent-sdk
+│ ├── create-caveman-agent/ # historical copy; source = caveman-agent-sdk
+│ ├── cli/ # @caveman-ai/cli
+│ ├── pi-extension/ # @caveman-ai/pi — native Pi extension (bundled into the CLI, published on `pi-v*` tags)
+│ ├── sdk/ # TypeScript + Python gateway clients
+│ ├── subagent-tax/ # Local harness-prefix benchmark
+│ └── shared/ # Contracts + binary installer
+├── engine/ · proxy/ # BSL local compression runtime + provider proxy
+├── rewriter/ # Prompt rewriter
+├── mcp/ · mem/ · shrink/ # Recovery tools, memory, output compression
+├── browse/ # consumer copy; source = caveman-browse
+├── extension/ # MV3 extension source
+├── shared/ # Provider catalog + BSL platform libraries
 │
-├── .claude-plugin/              # Claude Code plugin manifest (REQUIRED at root)
-├── plugins/caveman/             # Claude Code plugin distribution (CI-mirrored)
-│   ├── skills/                  # ← from skills/
-│   └── agents/                  # ← from agents/
+├── .claude-plugin/ # Claude Code plugin manifest (REQUIRED at root)
+├── plugins/caveman/ # Claude Code plugin distribution (CI-mirrored)
+│ ├── skills/ # ← from skills/
+│ └── agents/ # ← from agents/
 │
-├── dist/                        # Build artifacts (gitignored)
-│   └── caveman.skill            # ZIP of skills/caveman/, rebuilt by CI
+├── dist/ # Build artifacts (gitignored)
+│ └── caveman.skill # ZIP of skills/caveman/, rebuilt by CI
 │
-├── tests/                       # All tests (Node + Python)
-├── benchmarks/                  # Real token measurements through Claude API
-├── evals/                       # Three-arm eval harness
-├── docs/                        # User-facing docs site
-└── .github/workflows/           # CI sync
+├── tests/ # All tests (Node + Python)
+├── benchmarks/ # Real token measurements through Claude API
+├── evals/ # Three-arm eval harness
+├── docs/ # User-facing docs site
+└── .github/workflows/ # CI sync
 ```
 
 ---
@@ -219,16 +219,16 @@ Three hooks in `src/hooks/` plus a `caveman-config.js` shared module, a `caveman
 **Mode state is per session.** Each session's mode lives in `$CLAUDE_CONFIG_DIR/.caveman-sessions/<session_id>.mode`, keyed by the `session_id` Claude Code puts in every hook payload *and* in the statusline's stdin JSON. `$CLAUDE_CONFIG_DIR/.caveman-active` survives as a last-write-wins compat mirror (falls back to `~/.claude/`).
 
 ```
-SessionStart hook ──┐                                        ┌── UserPromptSubmit hook
-  (session_id,      │                                        │     (session_id, prompt)
-   source)          ▼                                        ▼
-        $CLAUDE_CONFIG_DIR/.caveman-sessions/<session_id>.mode
-                             │             │
-                          mirrors       reads
-                             ▼             ▼
-              .caveman-active      caveman-statusline.sh ◀── session JSON on stdin
-           (last-write-wins,        [CAVEMAN] / [CAVEMAN:ULTRA] / ...
-            compat only)
+SessionStart hook ──┐ ┌── UserPromptSubmit hook
+ (session_id, │ │ (session_id, prompt)
+ source) ▼ ▼
+ $CLAUDE_CONFIG_DIR/.caveman-sessions/<session_id>.mode
+ │ │
+ mirrors reads
+ ▼ ▼
+ .caveman-active caveman-statusline.sh ── session JSON on stdin
+ (last-write-wins, [CAVEMAN] / [CAVEMAN:ULTRA] / ...
+ compat only)
 ```
 
 Two invariants that are load-bearing, not stylistic:

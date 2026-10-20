@@ -1,4 +1,4 @@
-# Writing Good Tests
+﻿# Writing Good Tests
 
 **Load this reference when:** writing or changing tests, adding mocks, or
 adding cleanup/helper methods for tests.
@@ -30,11 +30,11 @@ shape. An expectation computed by the code under test — or its helpers —
 passes no matter what that code does:
 
 ```typescript
-// ❌ Mirror assertion: the same builder computes both sides — always true
+// Mirror assertion: the same builder computes both sides — always true
 const expected = buildSearchQuery({ tag: 'urgent' });
 expect(buildSearchQuery({ tag: 'urgent' })).toBe(expected);
 
-// ✅ Hand-derived literal
+// Hand-derived literal
 expect(buildSearchQuery({ tag: 'urgent' })).toBe('tag:"urgent"');
 ```
 
@@ -66,16 +66,16 @@ otherwise assert the first consumer-visible result that depends on them.
 
 ```
 BEFORE writing the test body:
-  Name the production change that would make this test fail.
+ Name the production change that would make this test fail.
 
-  Cannot name one            → redesign around an observable behavior
-  "The source text changed"  → run the artifact and assert its effects
-  Only intentional decisions → change detector; test the behavior
-                               that depends on the decision
+ Cannot name one → redesign around an observable behavior
+ "The source text changed" → run the artifact and assert its effects
+ Only intentional decisions → change detector; test the behavior
+ that depends on the decision
 
-  Confirm the expected value is derived without the code under test.
-  IF it reuses the code's logic or helpers:
-    Replace it with a literal or hand-checked fixture
+ Confirm the expected value is derived without the code under test.
+ IF it reuses the code's logic or helpers:
+ Replace it with a literal or hand-checked fixture
 ```
 
 ## Principle 2: Exercise the Real Thing
@@ -86,10 +86,10 @@ component. Assert the real component's behavior; if the mock is what you
 are checking, unmock it or delete the assertion.
 
 ```typescript
-// ✅ Real behavior
+// Real behavior
 expect(screen.getByRole('navigation')).toBeInTheDocument();
 
-// ❌ Mock existence
+// Mock existence
 expect(screen.getByTestId('sidebar-mock')).toBeInTheDocument();
 ```
 
@@ -102,12 +102,12 @@ the test depends on real. When unsure, run the test against the real
 implementation first and observe what actually needs to happen.
 
 ```typescript
-// ❌ The mock swallows the config write that duplicate detection reads
+// The mock swallows the config write that duplicate detection reads
 vi.mock('ToolCatalog', () => ({
-  discoverAndCacheTools: vi.fn().mockResolvedValue(undefined)
+ discoverAndCacheTools: vi.fn().mockResolvedValue(undefined)
 }));
 
-// ✅ Mock only the slow server startup; the config write stays real
+// Mock only the slow server startup; the config write stays real
 vi.mock('MCPServerManager');
 ```
 
@@ -136,15 +136,15 @@ mock here?"
 
 ```
 BEFORE adding a mock or test helper:
-  List the real method's side effects; keep the ones the test
-  depends on real — mock the slow/external level below them.
+ List the real method's side effects; keep the ones the test
+ depends on real — mock the slow/external level below them.
 
-  Mock responses mirror the complete real structure.
+ Mock responses mirror the complete real structure.
 
-  A method only tests call lives in test utilities, not production.
+ A method only tests call lives in test utilities, not production.
 
-  About to assert on the mock itself?
-    Unmock it or delete the assertion.
+ About to assert on the mock itself?
+ Unmock it or delete the assertion.
 ```
 
 ## Tests Ship With the Implementation

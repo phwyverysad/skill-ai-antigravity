@@ -1,9 +1,9 @@
----
+﻿---
 name: cavecrew
 description: >
-  When to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder`
-  (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inline
-  or using `Explore`. Their output is compressed, so main context lasts longer.
+ When to delegate to `cavecrew-investigator` (locate code), `cavecrew-builder`
+ (1-2 file edit) or `cavecrew-reviewer` (diff review) instead of working inline
+ or using `Explore`. Their output is compressed, so main context lasts longer.
 ---
 
 Cavecrew = three subagent presets that emit caveman output. Same job as Anthropic defaults (`Explore`, edit-style agents, reviewer); difference is the tool-result they return is compressed, so main context shrinks per delegation.
@@ -48,7 +48,7 @@ Or one of: `too-big.` / `needs-confirm.` / `ambiguous.` / `regressed.` (terminal
 **`cavecrew-reviewer`**
 ```
 path:line: <emoji> <severity>: <problem>. <fix>.
-totals: N🔴 N🟡 N🔵 N❓
+totals: N N N N
 ```
 Or `No issues.` Findings sorted file → line ascending.
 
