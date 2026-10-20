@@ -1,0 +1,1 @@
+Sketchup integration through the Model Context Protocol

@@ -1,0 +1,8 @@
+{
+  "name": "gdrive",
+  "displayName": "Google Drive",
+  "version": "0.0.3",
+  "description": "Search, upload, download, and share files.",
+  "disabled": true,
+  "logo": "https://www.gstatic.com/images/branding/productlogos/drive_2026/v2/web/192px.svg"
+}

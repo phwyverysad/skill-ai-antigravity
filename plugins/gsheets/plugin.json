@@ -1,0 +1,8 @@
+{
+  "name": "gsheets",
+  "displayName": "Google Sheets",
+  "version": "0.0.3",
+  "description": "Read, write, and format spreadsheets.",
+  "disabled": true,
+  "logo": "https://www.gstatic.com/images/branding/productlogos/sheets_2026/v2/web/192px.svg"
+}

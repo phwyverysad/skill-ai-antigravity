@@ -1,0 +1,1 @@
+{"name":"get_console_output","description":"Get the console output from the Studio output log.","parameters":{"properties":{"studio_id":{"description":"Selects Roblox Studio instance, use the list_roblox_studios tool to get available instances","type":"string"}},"required":["studio_id"],"type":"object"}}

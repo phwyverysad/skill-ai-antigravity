@@ -1,0 +1,1 @@
+{"name":"delete_component","description":"Delete a component by ID","parameters":{"properties":{"id":{"title":"Id","type":"string"}},"required":["id"],"title":"delete_componentArguments","type":"object"}}

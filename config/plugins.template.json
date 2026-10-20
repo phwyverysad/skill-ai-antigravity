@@ -1,0 +1,18 @@
+{
+  "plugins": {
+    "chrome-devtools-plugin": {
+      "installedFrom": {
+        "id": "antigravity-plugins-official/plugin/chrome-devtools-plugin",
+        "marketplace": "antigravity-plugins-official",
+        "version": "1.10.1"
+      }
+    },
+    "firebase": {
+      "installedFrom": {
+        "id": "antigravity-plugins-official/plugin/firebase",
+        "marketplace": "antigravity-plugins-official",
+        "version": "1.0.3"
+      }
+    }
+  }
+}

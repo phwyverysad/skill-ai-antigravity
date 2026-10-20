@@ -1,0 +1,1 @@
+Studio MCP Proxy - bridges MCP clients with Roblox Studio

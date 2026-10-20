@@ -1,0 +1,1 @@
+{"name":"DisplayInventory","description":"Read active display layout and DPI metadata. Reports display index, device name, monitor/work-area bounds, resolution, orientation, primary flag, effective DPI, and scale.","parameters":{"additionalProperties":false,"properties":{},"type":"object"}}

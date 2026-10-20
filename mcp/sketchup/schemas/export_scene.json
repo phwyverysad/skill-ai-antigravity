@@ -1,0 +1,1 @@
+{"name":"export_scene","description":"Export the current scene","parameters":{"properties":{"format":{"default":"skp","title":"Format","type":"string"}},"title":"export_sceneArguments","type":"object"}}

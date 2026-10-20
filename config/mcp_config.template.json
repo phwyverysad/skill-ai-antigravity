@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "Roblox_Studio": {
+      "command": "{{PYTHON_PATH}}",
+      "args": [
+        "{{USER_HOME}}/.gemini/roblox_studio_bridge.py"
+      ]
+    },
+    "sketchup": {
+      "command": "{{PYTHON_PATH}}",
+      "args": [
+        "-m",
+        "sketchup_mcp.server"
+      ]
+    },
+    "windows-mcp": {
+      "command": "{{WINDOWS_MCP_PATH}}",
+      "args": [
+        "serve",
+        "--no-control"
+      ]
+    },
+    "windows_mcp": {
+      "command": "{{WINDOWS_MCP_PATH}}",
+      "args": [
+        "serve",
+        "--no-control"
+      ]
+    }
+  }
+}

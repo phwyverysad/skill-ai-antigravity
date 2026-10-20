@@ -1,0 +1,1 @@
+{"name":"set_material","description":"Set material for a component","parameters":{"properties":{"id":{"title":"Id","type":"string"},"material":{"title":"Material","type":"string"}},"required":["id","material"],"title":"set_materialArguments","type":"object"}}

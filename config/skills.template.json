@@ -1,0 +1,10 @@
+{
+  "entries": [
+    {
+      "path": "{{GEMINI_HOME}}/antigravity/skills"
+    },
+    {
+      "path": "{{GEMINI_HOME}}/antigravity/skills/caveman/skills"
+    }
+  ]
+}
